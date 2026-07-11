@@ -3194,6 +3194,13 @@ select:focus {
 
   .onboarding-aside {
     min-height: 150px;
+    justify-content: flex-start;
+  }
+
+  .onboarding-aside .brand-mark {
+    position: static;
+    flex-basis: 58px;
+    margin-bottom: 18px;
   }
 }
 
@@ -3368,13 +3375,8 @@ select:focus {
   }
 
   .onboarding-aside {
-    min-height: 128px;
+    min-height: 0;
     padding: 22px;
-  }
-
-  .onboarding-aside .brand-mark {
-    top: 20px;
-    left: 22px;
   }
 }
 

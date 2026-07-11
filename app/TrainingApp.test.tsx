@@ -27,6 +27,7 @@ const EXPECTED_LEVELS = [
 ] as const;
 
 const TRAINING_APP_SOURCE = new URL("./TrainingApp.tsx", import.meta.url);
+const GLOBALS_CSS_SOURCE = new URL("./globals.css", import.meta.url);
 
 describe("AI Practice Lab training levels", () => {
   it("provides 15 lessons and three capstones across three levels", () => {
@@ -119,9 +120,22 @@ describe("AI Practice Lab training levels", () => {
     );
   });
 
+  it("keeps the onboarding brand mark in normal flow at mobile and tablet widths", async () => {
+    const source = await readFile(GLOBALS_CSS_SOURCE, "utf8");
+    const mobileRule = source.match(
+      /@media \(max-width:\s*840px\)\s*\{([\s\S]*?)@media \(max-width:\s*540px\)/,
+    )?.[1];
+
+    expect(mobileRule).toBeDefined();
+    expect(mobileRule).toMatch(
+      /\.onboarding-aside \.brand-mark\s*\{[^}]*position:\s*static;[^}]*flex-basis:\s*58px;[^}]*margin-bottom:\s*18px;/,
+    );
+  });
+
   it("keeps em dashes out of user-facing source and documentation", async () => {
     const files = [
       TRAINING_APP_SOURCE,
+      GLOBALS_CSS_SOURCE,
       new URL("./training-data.ts", import.meta.url),
       new URL("../README.md", import.meta.url),
     ];
