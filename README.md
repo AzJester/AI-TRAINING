@@ -1,9 +1,8 @@
 # AI Practice Lab
 
 AI Practice Lab is an interactive, self-paced course for people who want to use
-AI confidently at work. Its first course, **AI at Work: Think Clearly, Work
-Responsibly**, uses short lessons, realistic exercises, and an end-to-end
-capstone to turn prompt-writing guidance into repeatable practice.
+AI confidently at work. Three training levels use short lessons, realistic
+exercises, and practical capstones to turn AI guidance into repeatable habits.
 
 The course runs entirely in the browser. It does not call an AI service, require
 an API key, or send learner responses to a backend. Onboarding role families
@@ -13,12 +12,24 @@ compliance, finance, talent, communications, and business-operations functions.
 
 ## What learners can do
 
-- Work through five focused lessons and a capstone challenge.
+- Choose Beginner, Intermediate, or Advanced training.
+- Work through 15 focused lessons and three practical capstones.
 - Learn the **CLEAR** framework: Clarify, Limit, Engineer, Assess, and Refine.
 - Practice with guided exercises and immediate, rule-based feedback.
-- Resume where they left off with progress saved in the browser.
+- Track progress independently for each level and resume in the browser.
 - Review course completion and print a personal summary.
 - Use the lab comfortably on desktop, tablet, or mobile.
+
+## Training levels
+
+| Level | Focus | Structure |
+| --- | --- | --- |
+| Beginner | **Use AI with confidence** | Five CLEAR lessons and one capstone |
+| Intermediate | **Build reliable AI workflows** | Five CLEAR lessons and one capstone |
+| Advanced | **Govern and scale AI systems** | Five CLEAR lessons and one capstone |
+
+Each level is designed as a focused 60-minute path. Progress is calculated per
+level, so learners can move between levels without losing completed work.
 
 ## Run it locally
 
@@ -55,8 +66,9 @@ npm run lint
 npm test
 ```
 
-`npm test` creates a production build and checks its server-rendered HTML. To
-build or run the production output separately:
+`npm test` creates a production build, checks its server-rendered HTML, and runs
+the three-level component contract tests. To build or run the production output
+separately:
 
 ```powershell
 npm run build
@@ -69,12 +81,12 @@ AI Practice Lab is deliberately local-first. Course content and exercise logic
 ship with the application, while learner progress is stored in the current
 browser. Clearing browser storage or switching browsers starts a fresh course.
 
-The lesson flow introduces one idea at a time, then asks the learner to apply it
-before moving on. It covers clarifying the job, limiting risk, engineering
-context, assessing output, and refining the work while keeping human ownership.
-The capstone combines those skills into a recommendation the learner can defend.
-A printable completion summary provides a lightweight record of the learner's
-work.
+Each level introduces one idea at a time, then asks the learner to apply it
+before moving on. Every level covers clarifying the job, limiting risk,
+engineering context, assessing output, and refining the work while keeping
+human ownership. A level-specific capstone combines those skills in a realistic
+scenario. A printable completion summary provides a lightweight record of the
+learner's work.
 
 ## Project structure
 
@@ -98,13 +110,18 @@ Cloudflare Vite plugin.
 | `npm run build` | Create the production build |
 | `npm run start` | Serve the production build |
 | `npm run lint` | Check the project with ESLint |
-| `npm test` | Build and run the rendered HTML smoke tests |
+| `npm test` | Build and run all rendered HTML and component tests |
+| `npm run test:component` | Run the focused level and course contract tests |
 
 ## Privacy and reset behavior
 
 Learner input stays in the browser; this version has no analytics, account
-system, or remote AI requests. Use **Progress → Reset course progress** to start
-over while keeping the selected role profile.
+system, or remote AI requests. Use **Progress**, then **Reset course progress**,
+to start over while keeping the selected role profile.
+
+## Attribution
+
+Created by Dr Shane Turner. © 2026 Dr Shane Turner. All rights reserved.
 
 ## Accessibility
 

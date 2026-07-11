@@ -1,16 +1,22 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import {
-  CAPSTONE,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
+import {
+  ALL_CAPSTONES,
+  ALL_COURSE_MODULES,
   CLEAR_STEPS,
   COURSE,
-  COURSE_MODULES,
   RESOURCES,
+  TRAINING_LEVELS,
   type ActionPlanPractice,
   type CapstoneScenario,
   type ClaimVerdict,
-  type ClearStepKey,
   type ContextBuilderPractice,
   type CourseModule,
   type PracticeExercise,
@@ -18,11 +24,13 @@ import {
   type RewriteLabPractice,
   type RiskCategoryId,
   type RiskSortPractice,
+  type TrainingLevel,
+  type TrainingLevelId,
   type VerificationCheckPractice,
 } from "./training-data";
 
 type View = "home" | "practice" | "progress" | "resources";
-type ModuleTarget = ClearStepKey | "capstone";
+type ModuleTarget = string;
 
 interface LearnerProfile {
   role: string;
@@ -31,26 +39,33 @@ interface LearnerProfile {
 }
 
 interface TrainingProgress {
-  version: 1;
+  version: 2;
   profile: LearnerProfile | null;
-  completedModules: ClearStepKey[];
-  capstoneComplete: boolean;
-  quizScores: Partial<Record<ClearStepKey, number>>;
+  selectedLevel: TrainingLevelId;
+  completedModules: string[];
+  completedCapstones: string[];
+  quizScores: Record<string, number>;
   currentTarget: ModuleTarget | null;
+  currentStage: number;
   lastVisitedAt: string | null;
 }
 
-const STORAGE_KEY = "ai-practice-lab-progress-v1";
+const STORAGE_KEY = "ai-practice-lab-progress-v2";
+const LEGACY_STORAGE_KEY = "ai-practice-lab-progress-v1";
 
 const DEFAULT_PROGRESS: TrainingProgress = {
-  version: 1,
+  version: 2,
   profile: null,
+  selectedLevel: "beginner",
   completedModules: [],
-  capstoneComplete: false,
+  completedCapstones: [],
   quizScores: {},
   currentTarget: null,
+  currentStage: 0,
   lastVisitedAt: null,
 };
+
+const GENERAL_ROLE = "Astrion mission and business teams";
 
 const ROLE_OPTIONS = [
   "Systems Engineering & Integration",
@@ -68,6 +83,7 @@ const ROLE_OPTIONS = [
   "Finance, Accounting, Pricing & Procurement",
   "Human Resources, Talent & Workforce Development",
   "Communications, Marketing & Business Operations",
+  GENERAL_ROLE,
 ];
 
 const TASK_OPTIONS = [
@@ -96,26 +112,109 @@ const NAV_ITEMS: Array<{ id: View; label: string; icon: string }> = [
 function readProgress(): TrainingProgress {
   if (typeof window === "undefined") return DEFAULT_PROGRESS;
   try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const stored =
+      window.localStorage.getItem(STORAGE_KEY) ??
+      window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (!stored) return DEFAULT_PROGRESS;
-    const parsed = JSON.parse(stored) as Partial<TrainingProgress>;
-    if (parsed.version !== 1) return DEFAULT_PROGRESS;
+    const parsed = JSON.parse(stored) as Record<string, unknown>;
+    const profile = parsed.profile as LearnerProfile | null | undefined;
+    const normalizedProfile = profile
+      ? {
+          ...profile,
+          role: ROLE_OPTIONS.includes(profile.role)
+            ? profile.role
+            : ROLE_OPTIONS[0],
+        }
+      : null;
+
+    if (parsed.version === 1) {
+      const legacyIds: Record<string, string> = {
+        clarify: "beginner-clarify",
+        limit: "beginner-limit",
+        engineer: "beginner-engineer",
+        assess: "beginner-assess",
+        refine: "beginner-refine",
+      };
+      const completedModules = Array.isArray(parsed.completedModules)
+        ? parsed.completedModules
+            .map((id) => legacyIds[String(id)])
+            .filter((id): id is string => Boolean(id))
+        : [];
+      const legacyScores = (parsed.quizScores ?? {}) as Record<string, number>;
+      const quizScores = Object.fromEntries(
+        Object.entries(legacyScores)
+          .map(([id, score]) => [legacyIds[id], score] as const)
+          .filter(([id]) => Boolean(id)),
+      );
+
+      return {
+        ...DEFAULT_PROGRESS,
+        profile: normalizedProfile,
+        completedModules,
+        completedCapstones:
+          parsed.capstoneComplete === true ? ["beginner-capstone"] : [],
+        quizScores,
+      currentTarget:
+        typeof parsed.currentTarget === "string"
+            ? parsed.currentTarget === "capstone"
+              ? "beginner-capstone"
+              : legacyIds[parsed.currentTarget] ?? null
+            : null,
+        currentStage: 0,
+      };
+    }
+
+    if (parsed.version !== 2) return DEFAULT_PROGRESS;
+    const selectedLevel = TRAINING_LEVELS.some(
+      (level) => level.id === parsed.selectedLevel,
+    )
+      ? (parsed.selectedLevel as TrainingLevelId)
+      : "beginner";
+
+    const currentTarget =
+      typeof parsed.currentTarget === "string" &&
+      (ALL_COURSE_MODULES.some(
+        (module) => module.id === parsed.currentTarget,
+      ) ||
+        ALL_CAPSTONES.some(
+          (capstone) => capstone.id === parsed.currentTarget,
+        ))
+        ? parsed.currentTarget
+        : null;
+    const targetLevel =
+      ALL_COURSE_MODULES.find((module) => module.id === currentTarget)?.levelId ??
+      ALL_CAPSTONES.find((capstone) => capstone.id === currentTarget)?.levelId;
+
     return {
       ...DEFAULT_PROGRESS,
-      ...parsed,
-      profile: parsed.profile
-        ? {
-            ...parsed.profile,
-            role: ROLE_OPTIONS.includes(parsed.profile.role)
-              ? parsed.profile.role
-              : ROLE_OPTIONS[0],
-          }
-        : null,
+      selectedLevel: targetLevel ?? selectedLevel,
+      profile: normalizedProfile,
       completedModules: Array.isArray(parsed.completedModules)
-        ? parsed.completedModules.filter((id): id is ClearStepKey =>
-            COURSE_MODULES.some((module) => module.id === id),
-          )
+        ? parsed.completedModules
+            .map(String)
+            .filter((id) =>
+              ALL_COURSE_MODULES.some((module) => module.id === id),
+            )
         : [],
+      completedCapstones: Array.isArray(parsed.completedCapstones)
+        ? parsed.completedCapstones
+            .map(String)
+            .filter((id) =>
+              ALL_CAPSTONES.some((capstone) => capstone.id === id),
+            )
+        : [],
+      quizScores:
+        parsed.quizScores && typeof parsed.quizScores === "object"
+          ? (parsed.quizScores as Record<string, number>)
+          : {},
+      currentTarget,
+      currentStage:
+        typeof parsed.currentStage === "number" &&
+        Number.isFinite(parsed.currentStage)
+          ? Math.max(0, Math.min(3, Math.floor(parsed.currentStage)))
+          : 0,
+      lastVisitedAt:
+        typeof parsed.lastVisitedAt === "string" ? parsed.lastVisitedAt : null,
     };
   } catch {
     return DEFAULT_PROGRESS;
@@ -124,6 +223,20 @@ function readProgress(): TrainingProgress {
 
 function percentage(value: number, total: number) {
   return Math.round((value / total) * 100);
+}
+
+function scrollBehavior(): ScrollBehavior {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ? "auto"
+    : "smooth";
+}
+
+function isLevelComplete(progress: TrainingProgress, level: TrainingLevel) {
+  return (
+    level.modules.every((module) =>
+      progress.completedModules.includes(module.id),
+    ) && progress.completedCapstones.includes(level.capstone.id)
+  );
 }
 
 export function TrainingApp() {
@@ -137,7 +250,10 @@ export function TrainingApp() {
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
-      setProgress(readProgress());
+      const savedProgress = readProgress();
+      setProgress(savedProgress);
+      setActiveTarget(savedProgress.currentTarget);
+      setLessonStage(savedProgress.currentStage);
       setHydrated(true);
     });
     return () => window.cancelAnimationFrame(frame);
@@ -155,28 +271,81 @@ export function TrainingApp() {
     if (!activeTarget) return;
     const heading = document.getElementById("lesson-heading");
     heading?.focus();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }, [activeTarget, lessonStage]);
 
+  const activeLevel =
+    TRAINING_LEVELS.find((level) => level.id === progress.selectedLevel) ??
+    TRAINING_LEVELS[0];
   const completedCount =
-    progress.completedModules.length + (progress.capstoneComplete ? 1 : 0);
-  const totalCount = COURSE_MODULES.length + 1;
+    activeLevel.modules.filter((module) =>
+      progress.completedModules.includes(module.id),
+    ).length +
+    (progress.completedCapstones.includes(activeLevel.capstone.id) ? 1 : 0);
+  const totalCount = activeLevel.modules.length + 1;
   const progressPercent = percentage(completedCount, totalCount);
-  const nextModule = COURSE_MODULES.find(
+  const nextModule = activeLevel.modules.find(
     (module) => !progress.completedModules.includes(module.id),
   );
-  const nextTarget: ModuleTarget = nextModule?.id ?? "capstone";
+  const nextTarget: ModuleTarget = nextModule?.id ?? activeLevel.capstone.id;
 
   function changeView(nextView: View) {
+    setProgress((current) => ({
+      ...current,
+      currentTarget: null,
+      currentStage: 0,
+    }));
     setActiveTarget(null);
+    setLessonStage(0);
     setView(nextView);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: scrollBehavior() });
   }
 
   function openTarget(target: ModuleTarget, stage = 0) {
-    setProgress((current) => ({ ...current, currentTarget: target }));
+    const targetLevel =
+      ALL_COURSE_MODULES.find((module) => module.id === target)?.levelId ??
+      ALL_CAPSTONES.find((capstone) => capstone.id === target)?.levelId;
+    setProgress((current) => ({
+      ...current,
+      currentTarget: target,
+      currentStage: stage,
+      selectedLevel: targetLevel ?? current.selectedLevel,
+    }));
     setLessonStage(stage);
     setActiveTarget(target);
+  }
+
+  function changeLessonStage(stage: number) {
+    setProgress((current) => ({
+      ...current,
+      currentTarget: activeTarget ?? current.currentTarget,
+      currentStage: stage,
+    }));
+    setLessonStage(stage);
+  }
+
+  function closeTarget(nextView: View = "home") {
+    setProgress((current) => ({
+      ...current,
+      currentTarget: null,
+      currentStage: 0,
+    }));
+    setActiveTarget(null);
+    setLessonStage(0);
+    setView(nextView);
+  }
+
+  function selectLevel(levelId: TrainingLevelId) {
+    setProgress((current) => ({
+      ...current,
+      selectedLevel: levelId,
+      currentTarget: null,
+      currentStage: 0,
+    }));
+    setActiveTarget(null);
+    setLessonStage(0);
+    const levelName = TRAINING_LEVELS.find((level) => level.id === levelId)?.name;
+    setNotice(`${levelName} level selected.`);
   }
 
   function completeModule(module: CourseModule, score: number) {
@@ -189,25 +358,42 @@ export function TrainingApp() {
         ...current.quizScores,
         [module.id]: Math.max(current.quizScores[module.id] ?? 0, score),
       },
+      currentTarget: module.id,
+      currentStage: 3,
     }));
     setLessonStage(3);
     setNotice(`${module.skillName} is now ready.`);
   }
 
-  function completeCapstone() {
-    setProgress((current) => ({ ...current, capstoneComplete: true }));
+  function completeCapstone(capstone: CapstoneScenario) {
+    setProgress((current) => ({
+      ...current,
+      completedCapstones: current.completedCapstones.includes(capstone.id)
+        ? current.completedCapstones
+        : [...current.completedCapstones, capstone.id],
+      currentTarget: capstone.id,
+      currentStage: 2,
+    }));
     setLessonStage(2);
-    setNotice("Capstone complete. Your course summary is ready.");
+    setNotice(`${activeLevel.name} capstone complete. Your course summary is ready.`);
   }
 
-  function saveProfile(profile: LearnerProfile) {
-    setProgress((current) => ({ ...current, profile }));
+  function saveProfile(profile: LearnerProfile, levelId: TrainingLevelId) {
+    setProgress((current) => ({
+      ...current,
+      profile,
+      selectedLevel: levelId,
+    }));
     setNotice("Your learning path is ready.");
   }
 
   function resetProgress() {
     window.localStorage.removeItem(STORAGE_KEY);
-    setProgress({ ...DEFAULT_PROGRESS, profile: progress.profile });
+    setProgress({
+      ...DEFAULT_PROGRESS,
+      profile: progress.profile,
+      selectedLevel: progress.selectedLevel,
+    });
     setActiveTarget(null);
     setView("home");
     setShowReset(false);
@@ -218,9 +404,10 @@ export function TrainingApp() {
     const payload = JSON.stringify(
       {
         course: COURSE.title,
+        selectedLevel: progress.selectedLevel,
         exportedAt: new Date().toISOString(),
         completedModules: progress.completedModules,
-        capstoneComplete: progress.capstoneComplete,
+        completedCapstones: progress.completedCapstones,
         quizScores: progress.quizScores,
       },
       null,
@@ -239,14 +426,25 @@ export function TrainingApp() {
 
   const activeModule = useMemo(
     () =>
-      activeTarget && activeTarget !== "capstone"
-        ? COURSE_MODULES.find((module) => module.id === activeTarget)
+      activeTarget
+        ? ALL_COURSE_MODULES.find((module) => module.id === activeTarget)
+        : undefined,
+    [activeTarget],
+  );
+  const activeCapstone = useMemo(
+    () =>
+      activeTarget
+        ? ALL_CAPSTONES.find((capstone) => capstone.id === activeTarget)
         : undefined,
     [activeTarget],
   );
 
   return (
-    <div className="app-shell">
+    <>
+      <div
+        className="app-shell"
+        inert={hydrated && !progress.profile ? true : undefined}
+      >
       <a className="skip-link" href="#main-content">
         Skip to course content
       </a>
@@ -288,7 +486,7 @@ export function TrainingApp() {
 
         <div className="sidebar-progress">
           <div className="sidebar-progress-label">
-            <span>Course progress</span>
+            <span>{activeLevel.name} progress</span>
             <strong>{progressPercent}%</strong>
           </div>
           <div
@@ -329,47 +527,57 @@ export function TrainingApp() {
               module={activeModule}
               stage={lessonStage}
               isComplete={progress.completedModules.includes(activeModule.id)}
-              onStageChange={setLessonStage}
+              onStageChange={changeLessonStage}
               onComplete={completeModule}
-              onExit={() => {
-                setActiveTarget(null);
-                setView("home");
-              }}
+              onExit={() => closeTarget("home")}
               onOpenNext={() => {
-                const index = COURSE_MODULES.findIndex(
+                const lessonLevel =
+                  TRAINING_LEVELS.find(
+                    (level) => level.id === activeModule.levelId,
+                  ) ?? activeLevel;
+                const index = lessonLevel.modules.findIndex(
                   (module) => module.id === activeModule.id,
                 );
-                const following = COURSE_MODULES[index + 1];
-                openTarget(following?.id ?? "capstone");
+                const following = lessonLevel.modules[index + 1];
+                openTarget(following?.id ?? lessonLevel.capstone.id);
               }}
             />
-          ) : activeTarget === "capstone" ? (
+          ) : activeCapstone ? (
             <CapstonePlayer
-              capstone={CAPSTONE}
+              capstone={activeCapstone}
               stage={lessonStage}
-              complete={progress.capstoneComplete}
-              onStageChange={setLessonStage}
-              onComplete={completeCapstone}
-              onExit={() => {
-                setActiveTarget(null);
-                setView("home");
-              }}
+              complete={progress.completedCapstones.includes(activeCapstone.id)}
+              lessonsComplete={activeLevel.modules.every((module) =>
+                progress.completedModules.includes(module.id),
+              )}
+              onStageChange={changeLessonStage}
+              onComplete={() => completeCapstone(activeCapstone)}
+              onExit={() => closeTarget("home")}
             />
           ) : view === "home" ? (
             <Dashboard
               progress={progress}
+              level={activeLevel}
               progressPercent={progressPercent}
               nextTarget={nextTarget}
               onOpen={openTarget}
+              onSelectLevel={selectLevel}
               onViewProgress={() => changeView("progress")}
             />
           ) : view === "practice" ? (
-            <PracticeLibrary progress={progress} onOpen={openTarget} />
+            <PracticeLibrary
+              level={activeLevel}
+              progress={progress}
+              onOpen={openTarget}
+              onSelectLevel={selectLevel}
+            />
           ) : view === "progress" ? (
             <ProgressPage
+              level={activeLevel}
               progress={progress}
               progressPercent={progressPercent}
               onOpen={openTarget}
+              onSelectLevel={selectLevel}
               onExport={exportProgress}
               onReset={() => setShowReset(true)}
               showReset={showReset}
@@ -411,56 +619,70 @@ export function TrainingApp() {
         </nav>
       </div>
 
+        <div className="sr-only" aria-live="polite" aria-atomic="true">
+          {notice}
+        </div>
+      </div>
+
       {hydrated && !progress.profile ? (
         <Onboarding onSave={saveProfile} />
       ) : null}
-
-      <div className="sr-only" aria-live="polite" aria-atomic="true">
-        {notice}
-      </div>
-    </div>
+    </>
   );
 }
 
 function Dashboard({
+  level,
   progress,
   progressPercent,
   nextTarget,
   onOpen,
+  onSelectLevel,
   onViewProgress,
 }: {
+  level: TrainingLevel;
   progress: TrainingProgress;
   progressPercent: number;
   nextTarget: ModuleTarget;
   onOpen: (target: ModuleTarget, stage?: number) => void;
+  onSelectLevel: (levelId: TrainingLevelId) => void;
   onViewProgress: () => void;
 }) {
-  const nextModule = COURSE_MODULES.find((module) => module.id === nextTarget);
-  const nextTitle = nextModule?.title ?? CAPSTONE.title;
-  const selectedRole =
-    progress.profile?.role ?? "Astrion mission and business teams";
+  const nextModule = level.modules.find((module) => module.id === nextTarget);
+  const nextTitle = nextModule?.title ?? level.capstone.title;
+  const levelHasStarted = level.modules.some((module) =>
+    progress.completedModules.includes(module.id),
+  );
+  const lessonsComplete = level.modules.every((module) =>
+    progress.completedModules.includes(module.id),
+  );
+  const capstoneComplete = progress.completedCapstones.includes(level.capstone.id);
+  const levelComplete = isLevelComplete(progress, level);
+  const selectedRole = progress.profile?.role ?? GENERAL_ROLE;
 
   return (
     <div className="page dashboard-page">
+      <LevelSelector
+        activeLevel={level}
+        progress={progress}
+        onSelect={onSelectLevel}
+      />
       <section className="hero-panel" aria-labelledby="dashboard-title">
         <div className="hero-copy">
-          <p className="eyebrow">AI PRACTICE LAB</p>
-          <h1 id="dashboard-title">Use AI with confidence, not guesswork.</h1>
-          <p className="hero-lede">
-            Build practical habits for prompting, checking, and protecting
-            information. Five short lessons. Real workplace scenarios.
-          </p>
+          <p className="eyebrow">AI PRACTICE LAB · {level.name.toUpperCase()}</p>
+          <h1 id="dashboard-title">{level.title}</h1>
+          <p className="hero-lede">{level.description}</p>
           <div className="hero-actions">
             <button
               className="button button-primary"
               type="button"
               onClick={() => onOpen(nextTarget)}
             >
-              {progress.completedModules.length === 0
-                ? "Start lesson 1"
-                : progress.capstoneComplete
+              {!levelHasStarted
+                ? `Start ${level.name}`
+                : levelComplete
                   ? "Practice again"
-                  : "Continue learning"}
+                  : `Continue ${level.name}`}
               <span aria-hidden="true">→</span>
             </button>
             <button
@@ -497,11 +719,11 @@ function Dashboard({
               <p className="eyebrow">YOUR LEARNING PATH</p>
               <h2 id="course-path-title">Course path</h2>
             </div>
-            <p>{COURSE.minutes} focused minutes</p>
+            <p>{level.minutes} focused minutes</p>
           </div>
 
           <div className="course-path">
-            {COURSE_MODULES.map((module) => {
+            {level.modules.map((module) => {
               const complete = progress.completedModules.includes(module.id);
               const current = nextTarget === module.id;
               return (
@@ -543,18 +765,23 @@ function Dashboard({
           </div>
 
           <article className="capstone-card">
-            <div className="capstone-kicker">CAPSTONE · {CAPSTONE.minutes} MIN</div>
+            <div className="capstone-kicker">CAPSTONE · {level.capstone.minutes} MIN</div>
             <div>
-              <h3>{CAPSTONE.title}</h3>
-              <p>{CAPSTONE.description}</p>
+              <h3>{level.capstone.title}</h3>
+              <p>{level.capstone.description}</p>
             </div>
             <button
               className="button button-dark"
               type="button"
-              onClick={() => onOpen("capstone")}
+              disabled={!lessonsComplete}
+              onClick={() => onOpen(level.capstone.id)}
             >
-              {progress.capstoneComplete ? "Run it again" : "Open capstone"}
-              <span aria-hidden="true">→</span>
+              {!lessonsComplete
+                ? "Complete lessons first"
+                : capstoneComplete
+                  ? "Run it again"
+                  : "Open capstone"}
+              {lessonsComplete ? <span aria-hidden="true">→</span> : null}
             </button>
           </article>
         </div>
@@ -567,7 +794,7 @@ function Dashboard({
             </span>
             <h2>{nextTitle}</h2>
             <p>
-              Selected path: <strong>{selectedRole}</strong>. Examples are
+              {level.name} path for <strong>{selectedRole}</strong>. Examples are
               grounded in defense-contractor mission and business work.
             </p>
             <button
@@ -597,6 +824,62 @@ function Dashboard({
         </aside>
       </section>
     </div>
+  );
+}
+
+function LevelSelector({
+  activeLevel,
+  progress,
+  onSelect,
+}: {
+  activeLevel: TrainingLevel;
+  progress: TrainingProgress;
+  onSelect: (levelId: TrainingLevelId) => void;
+}) {
+  return (
+    <section className="level-selector" aria-labelledby="level-selector-title">
+      <div className="level-selector-heading">
+        <div>
+          <p className="eyebrow">CHOOSE YOUR LEVEL</p>
+          <h2 id="level-selector-title">Three levels. One CLEAR method.</h2>
+        </div>
+        <p>{activeLevel.outcome}</p>
+      </div>
+      <fieldset>
+        <legend className="sr-only">Training level</legend>
+        <div className="level-options">
+          {TRAINING_LEVELS.map((level) => {
+            const completed =
+              level.modules.filter((module) =>
+                progress.completedModules.includes(module.id),
+              ).length +
+              (progress.completedCapstones.includes(level.capstone.id) ? 1 : 0);
+            const percent = percentage(completed, level.modules.length + 1);
+            return (
+              <label key={level.id}>
+                <input
+                  type="radio"
+                  name="training-level"
+                  value={level.id}
+                  checked={activeLevel.id === level.id}
+                  onChange={() => onSelect(level.id)}
+                />
+                <span className="level-option-card">
+                  <span className="level-option-number">0{level.number}</span>
+                  <span className="level-option-copy">
+                    <strong>{level.name}</strong>
+                    <small>{level.title}</small>
+                  </span>
+                  <span className="level-option-progress">
+                    {percent === 100 ? "Complete" : `${percent}%`}
+                  </span>
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </fieldset>
+    </section>
   );
 }
 
@@ -640,7 +923,7 @@ function LessonPlayer({
       <div className="lesson-layout">
         <article className="lesson-content">
           <p className="eyebrow">
-            CLEAR · {CLEAR_STEPS.find((step) => step.key === module.id)?.letter}
+            {module.levelId.toUpperCase()} · CLEAR · {CLEAR_STEPS.find((step) => step.key === module.clearStep)?.letter}
           </p>
           <h1 id="lesson-heading" tabIndex={-1}>
             {module.title}
@@ -1363,6 +1646,11 @@ function CompletionPanel({
   onExit: () => void;
   onOpenNext: () => void;
 }) {
+  const moduleLevel = TRAINING_LEVELS.find(
+    (level) => level.id === module.levelId,
+  );
+  const isLastModule =
+    moduleLevel?.modules[moduleLevel.modules.length - 1]?.id === module.id;
   return (
     <section className="completion-panel">
       <div className="completion-mark" aria-hidden="true">
@@ -1377,7 +1665,7 @@ function CompletionPanel({
       </div>
       <div className="completion-actions">
         <button className="button button-primary" type="button" onClick={onOpenNext}>
-          {module.number === COURSE_MODULES.length ? "Open capstone" : "Next lesson"}
+          {isLastModule ? "Open capstone" : "Next lesson"}
           <span aria-hidden="true">→</span>
         </button>
         <button className="button button-quiet" type="button" onClick={onExit}>
@@ -1392,6 +1680,7 @@ function CapstonePlayer({
   capstone,
   stage,
   complete,
+  lessonsComplete,
   onStageChange,
   onComplete,
   onExit,
@@ -1399,6 +1688,7 @@ function CapstonePlayer({
   capstone: CapstoneScenario;
   stage: number;
   complete: boolean;
+  lessonsComplete: boolean;
   onStageChange: (stage: number) => void;
   onComplete: () => void;
   onExit: () => void;
@@ -1428,7 +1718,12 @@ function CapstonePlayer({
         ) : stage === 1 ? (
           <CapstoneWorkbench capstone={capstone} onComplete={onComplete} />
         ) : (
-          <CapstoneComplete complete={complete} onExit={onExit} />
+          <CapstoneComplete
+            capstone={capstone}
+            complete={complete}
+            lessonsComplete={lessonsComplete}
+            onExit={onExit}
+          />
         )}
       </div>
     </div>
@@ -1578,19 +1873,33 @@ function CapstoneWorkbench({
 }
 
 function CapstoneComplete({
+  capstone,
   complete,
+  lessonsComplete,
   onExit,
 }: {
+  capstone: CapstoneScenario;
   complete: boolean;
+  lessonsComplete: boolean;
   onExit: () => void;
 }) {
+  const level = TRAINING_LEVELS.find((item) => item.id === capstone.levelId);
+  const levelComplete = complete && lessonsComplete;
   return (
     <section className="completion-panel course-complete">
       <div className="completion-mark" aria-hidden="true">
         ✓
       </div>
-      <p className="eyebrow">COURSE COMPLETE</p>
-      <h2>You’re ready to work CLEAR.</h2>
+      <p className="eyebrow">
+        {levelComplete
+          ? `${level?.name.toUpperCase()} LEVEL COMPLETE`
+          : "CAPSTONE COMPLETE"}
+      </p>
+      <h2>
+        {levelComplete
+          ? `You’re ready to work CLEAR at the ${level?.name.toLowerCase()} level.`
+          : "Finish the remaining lessons to complete this level."}
+      </h2>
       <p>
         You can frame a task, protect information, build useful context, verify
         the result, and keep human judgment in charge.
@@ -1604,19 +1913,27 @@ function CapstoneComplete({
         ))}
       </div>
       <button className="button button-primary" type="button" onClick={onExit}>
-        {complete ? "View course summary" : "Return to course"}
+        Return to course
       </button>
     </section>
   );
 }
 
 function PracticeLibrary({
+  level,
   progress,
   onOpen,
+  onSelectLevel,
 }: {
+  level: TrainingLevel;
   progress: TrainingProgress;
   onOpen: (target: ModuleTarget, stage?: number) => void;
+  onSelectLevel: (levelId: TrainingLevelId) => void;
 }) {
+  const lessonsComplete = level.modules.every((module) =>
+    progress.completedModules.includes(module.id),
+  );
+
   return (
     <div className="page standard-page">
       <header className="page-header">
@@ -1627,8 +1944,13 @@ function PracticeLibrary({
           practice is deterministic and stays on this device.
         </p>
       </header>
+      <LevelSelector
+        activeLevel={level}
+        progress={progress}
+        onSelect={onSelectLevel}
+      />
       <div className="practice-library-grid">
-        {COURSE_MODULES.map((module) => (
+        {level.modules.map((module) => (
           <article className="practice-card" key={module.id}>
             <div className="practice-card-top">
               <span>{module.practice.eyebrow}</span>
@@ -1654,11 +1976,17 @@ function PracticeLibrary({
       <section className="practice-capstone-strip">
         <div>
           <p className="eyebrow">READY FOR THE FULL WORKFLOW?</p>
-          <h2>{CAPSTONE.title}</h2>
-          <p>{CAPSTONE.description}</p>
+          <h2>{level.capstone.title}</h2>
+          <p>{level.capstone.description}</p>
         </div>
-        <button className="button button-dark" type="button" onClick={() => onOpen("capstone")}>
-          Open capstone <span aria-hidden="true">→</span>
+        <button
+          className="button button-dark"
+          type="button"
+          disabled={!lessonsComplete}
+          onClick={() => onOpen(level.capstone.id)}
+        >
+          {lessonsComplete ? "Open capstone" : "Complete lessons first"}
+          {lessonsComplete ? <span aria-hidden="true">→</span> : null}
         </button>
       </section>
     </div>
@@ -1666,9 +1994,11 @@ function PracticeLibrary({
 }
 
 function ProgressPage({
+  level,
   progress,
   progressPercent,
   onOpen,
+  onSelectLevel,
   onExport,
   onReset,
   showReset,
@@ -1676,9 +2006,11 @@ function ProgressPage({
   onConfirmReset,
   onRoleChange,
 }: {
+  level: TrainingLevel;
   progress: TrainingProgress;
   progressPercent: number;
   onOpen: (target: ModuleTarget, stage?: number) => void;
+  onSelectLevel: (levelId: TrainingLevelId) => void;
   onExport: () => void;
   onReset: () => void;
   showReset: boolean;
@@ -1687,7 +2019,17 @@ function ProgressPage({
   onRoleChange: (role: string) => void;
 }) {
   const completedCount =
-    progress.completedModules.length + (progress.capstoneComplete ? 1 : 0);
+    level.modules.filter((module) => progress.completedModules.includes(module.id))
+      .length +
+    (progress.completedCapstones.includes(level.capstone.id) ? 1 : 0);
+  const completedLevels = TRAINING_LEVELS.filter((item) =>
+    isLevelComplete(progress, item),
+  ).length;
+  const lessonsComplete = level.modules.every((module) =>
+    progress.completedModules.includes(module.id),
+  );
+  const capstoneComplete = progress.completedCapstones.includes(level.capstone.id);
+  const levelComplete = isLevelComplete(progress, level);
 
   return (
     <div className="page standard-page progress-page">
@@ -1710,10 +2052,16 @@ function ProgressPage({
         </div>
       </header>
 
+      <LevelSelector
+        activeLevel={level}
+        progress={progress}
+        onSelect={onSelectLevel}
+      />
+
       <section className="progress-overview">
         <div className="progress-score">
           <strong>{progressPercent}%</strong>
-          <span>course complete</span>
+          <span>{level.name.toLowerCase()} complete</span>
         </div>
         <div>
           <h2>{completedCount === 6 ? "All six milestones ready" : `${completedCount} of 6 milestones ready`}</h2>
@@ -1721,7 +2069,7 @@ function ProgressPage({
             <span style={{ width: `${progressPercent}%` }} />
           </div>
           <p>
-            Starting confidence: {progress.profile?.confidence ?? "not set"} / 5
+            {completedLevels} of {TRAINING_LEVELS.length} levels complete · Starting confidence: {progress.profile?.confidence ?? "not set"} / 5
             · Saved only in this browser
           </p>
         </div>
@@ -1756,12 +2104,12 @@ function ProgressPage({
             <h2 id="skill-table-title">Your learning record</h2>
           </div>
         </div>
-        {COURSE_MODULES.map((module) => {
+        {level.modules.map((module) => {
           const complete = progress.completedModules.includes(module.id);
           return (
             <article key={module.id}>
               <span className={`skill-letter ${complete ? "ready" : ""}`}>
-                {CLEAR_STEPS.find((step) => step.key === module.id)?.letter}
+                {CLEAR_STEPS.find((step) => step.key === module.clearStep)?.letter}
               </span>
               <div>
                 <h3>{module.skillName}</h3>
@@ -1786,30 +2134,35 @@ function ProgressPage({
           );
         })}
         <article className="capstone-row">
-          <span className={`skill-letter ${progress.capstoneComplete ? "ready" : ""}`}>★</span>
+          <span className={`skill-letter ${capstoneComplete ? "ready" : ""}`}>★</span>
           <div>
             <h3>Responsible AI workflow</h3>
-            <p>{CAPSTONE.title}</p>
+            <p>{level.capstone.title}</p>
           </div>
           <div className="skill-score">
-            <span className={`status-pill ${progress.capstoneComplete ? "ready" : ""}`}>
-              {progress.capstoneComplete ? "Complete" : "Not started"}
+            <span className={`status-pill ${capstoneComplete ? "ready" : ""}`}>
+              {capstoneComplete ? "Complete" : "Not started"}
             </span>
           </div>
           <button
             className="button button-small button-quiet no-print"
             type="button"
-            onClick={() => onOpen("capstone")}
+            disabled={!lessonsComplete}
+            onClick={() => onOpen(level.capstone.id)}
           >
-            {progress.capstoneComplete ? "Run again" : "Start"}
+            {capstoneComplete
+              ? "Run again"
+              : lessonsComplete
+                ? "Start"
+                : "Finish lessons first"}
           </button>
         </article>
       </section>
 
-      {progress.capstoneComplete ? (
+      {levelComplete ? (
         <section className="completion-summary">
           <p className="eyebrow">COMPLETION SUMMARY</p>
-          <h2>{COURSE.title}</h2>
+          <h2>{level.name}: {level.title}</h2>
           <p>
             This learner completed the interactive AI Practice Lab and applied
             the CLEAR framework to a workplace capstone. This is a personal
@@ -1955,18 +2308,68 @@ function ResourceCard({
   );
 }
 
-function Onboarding({ onSave }: { onSave: (profile: LearnerProfile) => void }) {
+function Onboarding({
+  onSave,
+}: {
+  onSave: (profile: LearnerProfile, levelId: TrainingLevelId) => void;
+}) {
   const [role, setRole] = useState(ROLE_OPTIONS[0]);
   const [confidence, setConfidence] = useState(3);
   const [tasks, setTasks] = useState<string[]>([]);
+  const [levelId, setLevelId] = useState<TrainingLevelId>("intermediate");
+  const dialogRef = useRef<HTMLElement>(null);
+  const roleSelectRef = useRef<HTMLSelectElement>(null);
+
+  useEffect(() => {
+    roleSelectRef.current?.focus();
+  }, []);
+
+  function skipOnboarding() {
+    onSave(
+      {
+        role: GENERAL_ROLE,
+        confidence: 3,
+        tasks: [],
+      },
+      "beginner",
+    );
+  }
+
+  function handleDialogKeyDown(event: KeyboardEvent<HTMLElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      skipOnboarding();
+      return;
+    }
+    if (event.key !== "Tab") return;
+
+    const focusable = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) ?? [],
+    );
+    if (focusable.length === 0) return;
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
 
   return (
     <div className="dialog-backdrop">
       <section
+        ref={dialogRef}
         className="onboarding-dialog"
         role="dialog"
         aria-modal="true"
         aria-labelledby="onboarding-title"
+        onKeyDown={handleDialogKeyDown}
       >
         <div className="onboarding-aside" aria-hidden="true">
           <span className="brand-mark large">AI</span>
@@ -1982,7 +2385,11 @@ function Onboarding({ onSave }: { onSave: (profile: LearnerProfile) => void }) {
           </p>
           <label className="form-field">
             <span>Your Astrion role family</span>
-            <select value={role} onChange={(event) => setRole(event.target.value)}>
+            <select
+              ref={roleSelectRef}
+              value={role}
+              onChange={(event) => setRole(event.target.value)}
+            >
               {ROLE_OPTIONS.map((option) => (
                 <option key={option}>{option}</option>
               ))}
@@ -1998,7 +2405,16 @@ function Onboarding({ onSave }: { onSave: (profile: LearnerProfile) => void }) {
                     name="confidence"
                     value={value}
                     checked={confidence === value}
-                    onChange={() => setConfidence(value)}
+                    onChange={() => {
+                      setConfidence(value);
+                      setLevelId(
+                        value <= 2
+                          ? "beginner"
+                          : value <= 4
+                            ? "intermediate"
+                            : "advanced",
+                      );
+                    }}
                   />
                   <span>{value}</span>
                 </label>
@@ -2030,24 +2446,46 @@ function Onboarding({ onSave }: { onSave: (profile: LearnerProfile) => void }) {
               ))}
             </div>
           </fieldset>
+          <fieldset className="onboarding-level-field">
+            <legend>Choose where to start</legend>
+            <div>
+              {TRAINING_LEVELS.map((level) => {
+                const recommended =
+                  (confidence <= 2 && level.id === "beginner") ||
+                  (confidence >= 3 && confidence <= 4 && level.id === "intermediate") ||
+                  (confidence === 5 && level.id === "advanced");
+                return (
+                  <label key={level.id}>
+                    <input
+                      type="radio"
+                      name="starting-level"
+                      value={level.id}
+                      checked={levelId === level.id}
+                      onChange={() => setLevelId(level.id)}
+                    />
+                    <span>
+                      <b>0{level.number}</b>
+                      <strong>{level.name}</strong>
+                      <small>{level.title}</small>
+                      {recommended ? <em>Recommended for you</em> : null}
+                    </span>
+                  </label>
+                );
+              })}
+            </div>
+          </fieldset>
           <div className="onboarding-actions">
             <button
               className="button button-primary"
               type="button"
-              onClick={() => onSave({ role, confidence, tasks })}
+              onClick={() => onSave({ role, confidence, tasks }, levelId)}
             >
               Build my learning path <span aria-hidden="true">→</span>
             </button>
             <button
               className="text-button"
               type="button"
-              onClick={() =>
-                onSave({
-                  role: "Astrion mission and business teams",
-                  confidence: 3,
-                  tasks: [],
-                })
-              }
+              onClick={skipOnboarding}
             >
               Skip for now
             </button>
