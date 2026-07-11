@@ -21,7 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
     openGraph: {
       title: "AI Practice Lab",
       description:
-        "Think CLEAR. Work responsibly. Practical AI training for Astrion teams.",
+        "Think CLEAR. Work responsibly. Practical AI training for mission and business teams.",
       type: "website",
       images: [
         {

@@ -65,7 +65,7 @@ const DEFAULT_PROGRESS: TrainingProgress = {
   lastVisitedAt: null,
 };
 
-const GENERAL_ROLE = "Astrion mission and business teams";
+const GENERAL_ROLE = "Defense-contractor mission and business teams";
 
 const ROLE_OPTIONS = [
   "Systems Engineering & Integration",
@@ -2378,13 +2378,13 @@ function Onboarding({
         </div>
         <div className="onboarding-main">
           <p className="eyebrow">MAKE IT YOURS</p>
-          <h2 id="onboarding-title">A practical path, tuned to Astrion work.</h2>
+          <h2 id="onboarding-title">Choose an AI learning path for your work.</h2>
           <p>
             Choose the work area closest to your role and the tasks you want to
             improve. You can still explore every lesson and practice.
           </p>
           <label className="form-field">
-            <span>Your Astrion role family</span>
+            <span>Your role family</span>
             <select
               ref={roleSelectRef}
               value={role}

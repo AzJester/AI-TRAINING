@@ -28,6 +28,13 @@ const EXPECTED_LEVELS = [
 
 const TRAINING_APP_SOURCE = new URL("./TrainingApp.tsx", import.meta.url);
 const GLOBALS_CSS_SOURCE = new URL("./globals.css", import.meta.url);
+const USER_FACING_SOURCE_FILES = [
+  TRAINING_APP_SOURCE,
+  new URL("./training-data.ts", import.meta.url),
+  new URL("./layout.tsx", import.meta.url),
+  GLOBALS_CSS_SOURCE,
+  new URL("../README.md", import.meta.url),
+];
 
 describe("AI Practice Lab training levels", () => {
   it("provides 15 lessons and three capstones across three levels", () => {
@@ -132,15 +139,22 @@ describe("AI Practice Lab training levels", () => {
     );
   });
 
-  it("keeps em dashes out of user-facing source and documentation", async () => {
-    const files = [
-      TRAINING_APP_SOURCE,
-      GLOBALS_CSS_SOURCE,
-      new URL("./training-data.ts", import.meta.url),
-      new URL("../README.md", import.meta.url),
-    ];
+  it("keeps removed company branding out of rendered markup and user-facing source", async () => {
+    const removedBrand = ["ast", "rion"].join("");
+    const html = renderToStaticMarkup(<TrainingApp />);
+    expect(html.toLowerCase()).not.toContain(removedBrand);
 
-    for (const file of files) {
+    for (const file of USER_FACING_SOURCE_FILES) {
+      const source = await readFile(file, "utf8");
+      expect(
+        source.toLowerCase(),
+        `${file.pathname} contains removed company branding`,
+      ).not.toContain(removedBrand);
+    }
+  });
+
+  it("keeps em dashes out of user-facing source and documentation", async () => {
+    for (const file of USER_FACING_SOURCE_FILES) {
       const source = await readFile(file, "utf8");
       expect(source, `${file.pathname} contains an em dash`).not.toContain("\u2014");
     }

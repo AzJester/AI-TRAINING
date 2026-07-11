@@ -6,16 +6,9 @@ exercises, and practical capstones to turn AI guidance into repeatable habits.
 
 The course runs entirely in the browser. It does not call an AI service, require
 an API key, or send learner responses to a backend. Onboarding role families
-reflect Astrion's engineering, cyber, test, program, mission-support, space,
+reflect defense-contractor engineering, cyber, test, program, mission-support, space,
 business development, capture, proposal, solutions, contracts, legal,
 compliance, finance, talent, communications, and business-operations functions.
-
-## Live course
-
-[Open AI Practice Lab](https://astrion-ai-practice-lab.drjester.chatgpt.site/)
-
-The public course runs in a normal web browser. Learners do not need PowerShell,
-an installation, or access to this repository.
 
 ## What learners can do
 

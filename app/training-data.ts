@@ -217,7 +217,7 @@ export const COURSE: CourseMetadata = {
   description:
     "A three-level, hands-on pathway for using AI responsibly in defense, civilian, space, and business work.",
   audience:
-    "Astrion employees across defense, civilian, and space mission and business functions",
+    "Professionals across defense, civilian, space mission, and business functions",
   minutes: 180,
   levelCount: 3,
   moduleCount: 15,
