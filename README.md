@@ -12,6 +12,12 @@ compliance, finance, talent, communications, and business-operations functions.
 
 Repository: [AzJester/AI-TRAINING](https://github.com/AzJester/AI-TRAINING)
 
+## Public access
+
+The clean public address is [ai-training.st-dba.com](https://ai-training.st-dba.com).
+The address begins serving the site after its DNS verification records are
+added and the hosting certificate becomes active.
+
 ## What learners can do
 
 - Choose Beginner, Intermediate, or Advanced training.
