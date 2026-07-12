@@ -10,14 +10,23 @@ reflect defense-contractor engineering, cyber, test, program, mission-support, s
 business development, capture, proposal, solutions, contracts, legal,
 compliance, finance, talent, communications, and business-operations functions.
 
+Repository: [AzJester/AI-TRAINING](https://github.com/AzJester/AI-TRAINING)
+
 ## What learners can do
 
 - Choose Beginner, Intermediate, or Advanced training.
 - Work through 15 focused lessons and three practical capstones.
 - Learn the **CLEAR** framework: Clarify, Limit, Engineer, Assess, and Refine.
 - Practice with guided exercises and immediate, rule-based feedback.
+- Use Creator Studio to select models, design Custom GPT instructions, build a
+  `SKILL.md`, compose image prompts, and explore role-based examples.
+- Search, copy, and bookmark reusable prompt templates.
+- Follow a safe-data decision coach before entering workplace information.
+- Complete an adaptive knowledge check that returns missed concepts for review.
 - Track progress independently for each level and resume in the browser.
-- Review course completion and print a personal summary.
+- Review local instructor analytics, export progress, and download a personal
+  completion certificate.
+- Reset every saved activity and bookmark to 0 at any time.
 - Use the lab comfortably on desktop, tablet, or mobile.
 
 ## Training levels
@@ -30,6 +39,42 @@ compliance, finance, talent, communications, and business-operations functions.
 
 Each level is designed as a focused 60-minute path. Progress is calculated per
 level, so learners can move between levels without losing completed work.
+
+## Creator Studio
+
+Creator Studio expands the course into eight local, interactive labs:
+
+| Lab | What it produces |
+| --- | --- |
+| Model Selector | A model recommendation based on task, surface, speed, cost, and depth |
+| Custom GPT Builder | Structured instructions with purpose, behavior, boundaries, and quality checks |
+| Codex Skills Workshop | A reusable `SKILL.md` file and recommended skill folder structure |
+| Image Prompt Studio | A detailed visual brief for generation or editing |
+| Role Use-Case Gallery | Searchable examples for mission, engineering, cyber, program, and business teams |
+| Prompt Template Library | Searchable, copyable, and bookmarkable prompt structures |
+| Safe-Data Decision Coach | A branching stop, review, or proceed recommendation |
+| AI Updates | Dated product guidance linked to official sources |
+
+The role gallery includes business development, capture, proposals, solutions,
+contracts, legal, human resources, finance, pricing, procurement, program
+management, engineering, software, data, cybersecurity, test, quality,
+security, supply chain, logistics, communications, and operations.
+
+## Current OpenAI guidance
+
+The model and product lessons are dated so users know when to recheck them.
+Guidance in this release was verified on July 12, 2026 against official OpenAI
+sources:
+
+- [ChatGPT model guidance](https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt)
+- [OpenAI API model catalog](https://developers.openai.com/api/docs/models)
+- [Creating and editing GPTs](https://help.openai.com/en/articles/8554397-creating-a-gpt)
+- [Building Codex Skills](https://developers.openai.com/codex/skills)
+- [Image generation guidance](https://developers.openai.com/api/docs/guides/image-generation)
+
+Model access depends on the user's plan, workspace settings, approved tools,
+and rollout status. The app does not make API calls or claim that a model is
+available in a specific workplace.
 
 ## Run it locally
 
@@ -86,7 +131,8 @@ before moving on. Every level covers clarifying the job, limiting risk,
 engineering context, assessing output, and refining the work while keeping
 human ownership. A level-specific capstone combines those skills in a realistic
 scenario. A printable completion summary provides a lightweight record of the
-learner's work.
+learner's work. The instructor view is a snapshot of this browser only. It is
+not team analytics, personnel evaluation, or an externally verified credential.
 
 ## Project structure
 
@@ -115,9 +161,11 @@ Cloudflare Vite plugin.
 
 ## Privacy and reset behavior
 
-Learner input stays in the browser; this version has no analytics, account
-system, or remote AI requests. Use **Progress**, then **Reset course progress**,
-to start over while keeping the selected role profile.
+Learner input stays in the browser. This version has no analytics, account
+system, remote AI requests, or organization-wide tracking. Use the visible
+**Reset to 0** control or open **Progress**, then **Reset all progress to 0**,
+to clear lessons, quizzes, Creator Studio activity, and bookmarks while keeping
+the selected learner profile.
 
 ## Attribution
 

@@ -28,11 +28,14 @@ import {
   type TrainingLevelId,
   type VerificationCheckPractice,
 } from "./training-data";
+import { CreatorStudio } from "./CreatorStudio";
+import { InstructorPanel } from "./InstructorPanel";
 
-type View = "home" | "practice" | "progress" | "resources";
+type View = "home" | "studio" | "practice" | "progress" | "resources";
 type ModuleTarget = string;
 
 interface LearnerProfile {
+  name: string;
   role: string;
   confidence: number;
   tasks: string[];
@@ -45,6 +48,8 @@ interface TrainingProgress {
   completedModules: string[];
   completedCapstones: string[];
   quizScores: Record<string, number>;
+  studioCompleted: string[];
+  bookmarks: string[];
   currentTarget: ModuleTarget | null;
   currentStage: number;
   lastVisitedAt: string | null;
@@ -60,6 +65,8 @@ const DEFAULT_PROGRESS: TrainingProgress = {
   completedModules: [],
   completedCapstones: [],
   quizScores: {},
+  studioCompleted: [],
+  bookmarks: [],
   currentTarget: null,
   currentStage: 0,
   lastVisitedAt: null,
@@ -104,9 +111,10 @@ const TASK_OPTIONS = [
 
 const NAV_ITEMS: Array<{ id: View; label: string; icon: string }> = [
   { id: "home", label: "Course", icon: "01" },
-  { id: "practice", label: "Practice", icon: "02" },
-  { id: "progress", label: "Progress", icon: "03" },
-  { id: "resources", label: "Resources", icon: "04" },
+  { id: "studio", label: "Studio", icon: "02" },
+  { id: "practice", label: "Practice", icon: "03" },
+  { id: "progress", label: "Progress", icon: "04" },
+  { id: "resources", label: "Resources", icon: "05" },
 ];
 
 function readProgress(): TrainingProgress {
@@ -121,6 +129,10 @@ function readProgress(): TrainingProgress {
     const normalizedProfile = profile
       ? {
           ...profile,
+          name:
+            typeof profile.name === "string" && profile.name.trim()
+              ? profile.name.trim().slice(0, 80)
+              : "Learner",
           role: ROLE_OPTIONS.includes(profile.role)
             ? profile.role
             : ROLE_OPTIONS[0],
@@ -207,6 +219,12 @@ function readProgress(): TrainingProgress {
         parsed.quizScores && typeof parsed.quizScores === "object"
           ? (parsed.quizScores as Record<string, number>)
           : {},
+      studioCompleted: Array.isArray(parsed.studioCompleted)
+        ? [...new Set(parsed.studioCompleted.map(String))]
+        : [],
+      bookmarks: Array.isArray(parsed.bookmarks)
+        ? [...new Set(parsed.bookmarks.map(String))]
+        : [],
       currentTarget,
       currentStage:
         typeof parsed.currentStage === "number" &&
@@ -222,7 +240,21 @@ function readProgress(): TrainingProgress {
 }
 
 function percentage(value: number, total: number) {
-  return Math.round((value / total) * 100);
+  return total > 0 ? Math.round((value / total) * 100) : 0;
+}
+
+function escapeHtml(value: string) {
+  return value.replace(
+    /[&<>"']/g,
+    (character) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;",
+      })[character] ?? character,
+  );
 }
 
 function scrollBehavior(): ScrollBehavior {
@@ -387,6 +419,30 @@ export function TrainingApp() {
     setNotice("Your learning path is ready.");
   }
 
+  function completeStudioActivity(activityId: string) {
+    setProgress((current) => ({
+      ...current,
+      studioCompleted: current.studioCompleted.includes(activityId)
+        ? current.studioCompleted
+        : [...current.studioCompleted, activityId],
+    }));
+    setNotice("Creator Studio activity marked complete.");
+  }
+
+  function toggleBookmark(templateId: string) {
+    setProgress((current) => ({
+      ...current,
+      bookmarks: current.bookmarks.includes(templateId)
+        ? current.bookmarks.filter((id) => id !== templateId)
+        : [...current.bookmarks, templateId],
+    }));
+    setNotice(
+      progress.bookmarks.includes(templateId)
+        ? "Bookmark removed."
+        : "Template bookmarked on this device.",
+    );
+  }
+
   function resetProgress() {
     window.localStorage.removeItem(STORAGE_KEY);
     setProgress({
@@ -395,20 +451,24 @@ export function TrainingApp() {
       selectedLevel: progress.selectedLevel,
     });
     setActiveTarget(null);
+    setLessonStage(0);
     setView("home");
     setShowReset(false);
-    setNotice("Course progress has been reset.");
+    setNotice("All saved progress and bookmarks are reset to 0.");
   }
 
   function exportProgress() {
     const payload = JSON.stringify(
       {
         course: COURSE.title,
+        learner: progress.profile,
         selectedLevel: progress.selectedLevel,
         exportedAt: new Date().toISOString(),
         completedModules: progress.completedModules,
         completedCapstones: progress.completedCapstones,
         quizScores: progress.quizScores,
+        creatorStudioActivities: progress.studioCompleted,
+        bookmarkedTemplates: progress.bookmarks,
       },
       null,
       2,
@@ -422,6 +482,37 @@ export function TrainingApp() {
     link.click();
     URL.revokeObjectURL(url);
     setNotice("Progress export prepared.");
+  }
+
+  function downloadCertificate(level: TrainingLevel) {
+    if (!isLevelComplete(progress, level)) {
+      setNotice("Complete this level before downloading its certificate.");
+      return;
+    }
+
+    const learnerName = escapeHtml(progress.profile?.name || "Learner");
+    const role = escapeHtml(progress.profile?.role || GENERAL_ROLE);
+    const levelName = escapeHtml(level.name);
+    const levelTitle = escapeHtml(level.title);
+    const completedOn = new Intl.DateTimeFormat(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(new Date());
+    const certificate = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Practice Lab Certificate</title><style>
+body{margin:0;background:#f4f3f7;color:#1f2537;font-family:Segoe UI,Arial,sans-serif}.certificate{box-sizing:border-box;max-width:1000px;min-height:700px;margin:40px auto;border:12px solid #442c81;background:#fff;padding:70px;text-align:center;box-shadow:0 20px 60px rgba(31,37,55,.15)}.mark{display:grid;width:72px;height:72px;margin:0 auto 28px;place-items:center;border-radius:20px 20px 6px 20px;background:#29aae1;color:#1f2537;font-weight:900}.eyebrow{color:#442c81;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}h1{margin:18px 0;font-size:52px}h2{margin:20px 0 8px;color:#442c81;font-size:30px}.role{color:#66677a}.rule{width:120px;height:5px;margin:34px auto;background:#29aae1}.footer{display:flex;justify-content:space-between;gap:20px;margin-top:60px;border-top:1px solid #ced4da;padding-top:20px;color:#66677a;font-size:13px}@media print{body{background:#fff}.certificate{margin:0;box-shadow:none}}
+</style></head><body><main class="certificate"><div class="mark">AI</div><p class="eyebrow">Certificate of completion</p><h1>${learnerName}</h1><p>has completed the</p><h2>${levelName}: ${levelTitle}</h2><p class="role">Role path: ${role}</p><div class="rule"></div><p>Applied the CLEAR framework through five lessons and a workplace capstone.</p><div class="footer"><span>Completed ${completedOn}</span><span>Created by Dr Shane Turner<br>&copy; 2026 Dr Shane Turner</span></div></main></body></html>`;
+    const url = URL.createObjectURL(
+      new Blob([certificate], { type: "text/html;charset=utf-8" }),
+    );
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `ai-practice-lab-${level.id}-certificate.html`;
+    link.click();
+    URL.revokeObjectURL(url);
+    setNotice(`${level.name} certificate downloaded.`);
   }
 
   const activeModule = useMemo(
@@ -502,6 +593,16 @@ export function TrainingApp() {
           <small>
             {completedCount} of {totalCount} learning milestones ready
           </small>
+          <button
+            className="sidebar-reset"
+            type="button"
+            onClick={() => {
+              setShowReset(true);
+              changeView("progress");
+            }}
+          >
+            Reset to 0
+          </button>
         </div>
       </aside>
 
@@ -564,6 +665,15 @@ export function TrainingApp() {
               onSelectLevel={selectLevel}
               onViewProgress={() => changeView("progress")}
             />
+          ) : view === "studio" ? (
+            <CreatorStudio
+              role={progress.profile?.role ?? GENERAL_ROLE}
+              completed={progress.studioCompleted}
+              bookmarks={progress.bookmarks}
+              onComplete={completeStudioActivity}
+              onToggleBookmark={toggleBookmark}
+              onNotice={setNotice}
+            />
           ) : view === "practice" ? (
             <PracticeLibrary
               level={activeLevel}
@@ -579,6 +689,7 @@ export function TrainingApp() {
               onOpen={openTarget}
               onSelectLevel={selectLevel}
               onExport={exportProgress}
+              onDownloadCertificate={() => downloadCertificate(activeLevel)}
               onReset={() => setShowReset(true)}
               showReset={showReset}
               onCancelReset={() => setShowReset(false)}
@@ -587,7 +698,19 @@ export function TrainingApp() {
                 setProgress((current) => ({
                   ...current,
                   profile: {
+                    name: current.profile?.name ?? "Learner",
                     role,
+                    confidence: current.profile?.confidence ?? 3,
+                    tasks: current.profile?.tasks ?? [],
+                  },
+                }))
+              }
+              onNameChange={(name) =>
+                setProgress((current) => ({
+                  ...current,
+                  profile: {
+                    name,
+                    role: current.profile?.role ?? GENERAL_ROLE,
                     confidence: current.profile?.confidence ?? 3,
                     tasks: current.profile?.tasks ?? [],
                   },
@@ -2000,11 +2123,13 @@ function ProgressPage({
   onOpen,
   onSelectLevel,
   onExport,
+  onDownloadCertificate,
   onReset,
   showReset,
   onCancelReset,
   onConfirmReset,
   onRoleChange,
+  onNameChange,
 }: {
   level: TrainingLevel;
   progress: TrainingProgress;
@@ -2012,12 +2137,17 @@ function ProgressPage({
   onOpen: (target: ModuleTarget, stage?: number) => void;
   onSelectLevel: (levelId: TrainingLevelId) => void;
   onExport: () => void;
+  onDownloadCertificate: () => void;
   onReset: () => void;
   showReset: boolean;
   onCancelReset: () => void;
   onConfirmReset: () => void;
   onRoleChange: (role: string) => void;
+  onNameChange: (name: string) => void;
 }) {
+  const [progressMode, setProgressMode] = useState<"learner" | "instructor">(
+    "learner",
+  );
   const completedCount =
     level.modules.filter((module) => progress.completedModules.includes(module.id))
       .length +
@@ -2049,6 +2179,19 @@ function ProgressPage({
           <button className="button button-quiet" type="button" onClick={onExport}>
             Export progress
           </button>
+          <button
+            className="button button-primary"
+            type="button"
+            disabled={!levelComplete}
+            title={
+              levelComplete
+                ? "Download this level certificate"
+                : "Complete all five lessons and the capstone first"
+            }
+            onClick={onDownloadCertificate}
+          >
+            Download certificate
+          </button>
         </div>
       </header>
 
@@ -2057,6 +2200,47 @@ function ProgressPage({
         progress={progress}
         onSelect={onSelectLevel}
       />
+
+      <div className="progress-view-switcher no-print" role="group" aria-label="Progress view">
+        <button
+          type="button"
+          className={progressMode === "learner" ? "is-active" : ""}
+          onClick={() => setProgressMode("learner")}
+        >
+          Learner view
+        </button>
+        <button
+          type="button"
+          className={progressMode === "instructor" ? "is-active" : ""}
+          onClick={() => setProgressMode("instructor")}
+        >
+          Instructor view
+        </button>
+      </div>
+
+      {progressMode === "instructor" ? (
+        <InstructorPanel
+          learnerName={progress.profile?.name ?? "Learner"}
+          role={progress.profile?.role ?? GENERAL_ROLE}
+          selectedLevel={level.name}
+          moduleCompleted={progress.completedModules.length}
+          moduleTotal={ALL_COURSE_MODULES.length}
+          capstonesCompleted={progress.completedCapstones.length}
+          capstoneTotal={ALL_CAPSTONES.length}
+          creatorCompleted={progress.studioCompleted.length}
+          creatorTotal={8}
+          quizScores={progress.quizScores}
+          bookmarksCount={progress.bookmarks.length}
+          onExport={onExport}
+          onPrint={() => window.print()}
+          onReset={() => {
+            if (window.confirm("Reset all saved progress and bookmarks to 0?")) {
+              onConfirmReset();
+            }
+          }}
+        />
+      ) : (
+        <>
 
       <section className="progress-overview">
         <div className="progress-score">
@@ -2084,17 +2268,28 @@ function ProgressPage({
             available; this profile tunes how the learning path is framed.
           </p>
         </div>
-        <label>
-          <span>Your role family</span>
-          <select
-            value={progress.profile?.role ?? ROLE_OPTIONS[0]}
-            onChange={(event) => onRoleChange(event.target.value)}
-          >
-            {ROLE_OPTIONS.map((role) => (
-              <option key={role}>{role}</option>
-            ))}
-          </select>
-        </label>
+        <div className="role-profile-fields">
+          <label>
+            <span>Name for certificates</span>
+            <input
+              type="text"
+              maxLength={80}
+              value={progress.profile?.name ?? "Learner"}
+              onChange={(event) => onNameChange(event.target.value)}
+            />
+          </label>
+          <label>
+            <span>Your role family</span>
+            <select
+              value={progress.profile?.role ?? ROLE_OPTIONS[0]}
+              onChange={(event) => onRoleChange(event.target.value)}
+            >
+              {ROLE_OPTIONS.map((role) => (
+                <option key={role}>{role}</option>
+              ))}
+            </select>
+          </label>
+        </div>
       </section>
 
       <section className="skill-table" aria-labelledby="skill-table-title">
@@ -2185,13 +2380,13 @@ function ProgressPage({
         </div>
         {!showReset ? (
           <button className="text-button danger" type="button" onClick={onReset}>
-            Reset course progress
+            Reset all progress to 0
           </button>
         ) : (
           <div className="reset-confirm" role="group" aria-label="Confirm reset">
-            <span>Reset all lesson and quiz progress?</span>
+            <span>Reset lessons, Creator Studio, quizzes, and bookmarks to 0? Your profile stays saved.</span>
             <button className="button button-danger button-small" type="button" onClick={onConfirmReset}>
-              Yes, reset
+              Yes, reset to 0
             </button>
             <button className="button button-quiet button-small" type="button" onClick={onCancelReset}>
               Cancel
@@ -2199,6 +2394,8 @@ function ProgressPage({
           </div>
         )}
       </section>
+        </>
+      )}
     </div>
   );
 }
@@ -2313,6 +2510,7 @@ function Onboarding({
 }: {
   onSave: (profile: LearnerProfile, levelId: TrainingLevelId) => void;
 }) {
+  const [name, setName] = useState("");
   const [role, setRole] = useState(ROLE_OPTIONS[0]);
   const [confidence, setConfidence] = useState(3);
   const [tasks, setTasks] = useState<string[]>([]);
@@ -2327,6 +2525,7 @@ function Onboarding({
   function skipOnboarding() {
     onSave(
       {
+        name: "Learner",
         role: GENERAL_ROLE,
         confidence: 3,
         tasks: [],
@@ -2394,6 +2593,16 @@ function Onboarding({
                 <option key={option}>{option}</option>
               ))}
             </select>
+          </label>
+          <label className="form-field">
+            <span>Name for your certificate (optional)</span>
+            <input
+              type="text"
+              maxLength={80}
+              value={name}
+              placeholder="Your name"
+              onChange={(event) => setName(event.target.value)}
+            />
           </label>
           <fieldset className="confidence-field">
             <legend>How confident do you feel using AI at work?</legend>
@@ -2478,7 +2687,17 @@ function Onboarding({
             <button
               className="button button-primary"
               type="button"
-              onClick={() => onSave({ role, confidence, tasks }, levelId)}
+              onClick={() =>
+                onSave(
+                  {
+                    name: name.trim() || "Learner",
+                    role,
+                    confidence,
+                    tasks,
+                  },
+                  levelId,
+                )
+              }
             >
               Build my learning path <span aria-hidden="true">→</span>
             </button>

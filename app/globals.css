@@ -294,6 +294,22 @@ h3 {
   line-height: 1.35;
 }
 
+.sidebar-reset {
+  width: 100%;
+  margin-top: 12px;
+  border: 1px solid #e6b7ad;
+  border-radius: 8px;
+  background: #fff4f1;
+  color: #a62710;
+  padding: 7px 8px;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.sidebar-reset:hover {
+  border-color: var(--coral);
+}
+
 .progress-track {
   position: relative;
   width: 100%;
@@ -1563,6 +1579,7 @@ main {
 
 textarea,
 select,
+input[type="text"],
 .form-field select {
   width: 100%;
   border: 1px solid var(--line-strong);
@@ -1582,7 +1599,8 @@ textarea::placeholder {
 }
 
 textarea:focus,
-select:focus {
+select:focus,
+input[type="text"]:focus {
   border-color: var(--cobalt);
   box-shadow: 0 0 0 3px rgba(68, 44, 129, 0.14);
 }
@@ -2265,6 +2283,37 @@ select:focus {
   font-weight: 750;
 }
 
+.role-profile-fields {
+  display: grid;
+  gap: 12px;
+}
+
+.progress-view-switcher {
+  display: inline-grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-bottom: 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 4px;
+}
+
+.progress-view-switcher button {
+  min-height: 40px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  padding: 0 16px;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.progress-view-switcher button.is-active {
+  background: var(--cobalt);
+  color: #fff;
+}
+
 .skill-table {
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -2850,6 +2899,22 @@ select:focus {
     font-size: 0.7rem;
   }
 
+  .sidebar-reset {
+    overflow: hidden;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    color: transparent;
+    font-size: 0;
+  }
+
+  .sidebar-reset::after {
+    color: #a62710;
+    content: "0";
+    font-size: 0.75rem;
+    font-weight: 900;
+  }
+
   .page {
     width: min(1220px, calc(100% - 48px));
   }
@@ -2954,7 +3019,7 @@ select:focus {
     z-index: 30;
     inset: auto 0 0;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     border-top: 1px solid var(--line);
     background: rgba(255, 255, 255, 0.97);
     padding: 7px max(8px, env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
