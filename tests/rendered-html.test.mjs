@@ -35,9 +35,13 @@ test("server-renders the AI Practice Lab course shell", async () => {
   assert.match(html, /\bCLEAR\b/i);
   assert.match(html, /Course path/i);
   assert.match(html, /Created by Dr Shane Turner/i);
-  assert.match(visibleHtml, /Version 2\.0\.0/i);
+  assert.match(visibleHtml, /Version 2\.0\.1/i);
   assert.match(visibleHtml, /Updated July 13, 2026/i);
   assert.match(html, /© 2026 Dr Shane Turner\. All rights reserved\./i);
+  assert.match(html, /href="https:\/\/ai-training\.st-dba\.com\/favicon\.ico"/i);
+  assert.match(html, /href="https:\/\/ai-training\.st-dba\.com\/favicon-32x32\.png"/i);
+  assert.match(html, /href="https:\/\/ai-training\.st-dba\.com\/icon-512\.png"/i);
+  assert.match(html, /href="https:\/\/ai-training\.st-dba\.com\/apple-touch-icon\.png"/i);
 });
 
 test("does not ship the starter preview", async () => {

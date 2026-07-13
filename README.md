@@ -1,6 +1,6 @@
 # AI Practice Lab
 
-Current release: Version 2.0.0, updated July 13, 2026.
+Current release: Version 2.0.1, updated July 13, 2026.
 
 AI Practice Lab is an interactive, self-paced course for people who want to use
 AI confidently at work. Three training levels use short lessons, realistic
