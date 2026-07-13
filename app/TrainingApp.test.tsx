@@ -77,7 +77,7 @@ describe("AI Practice Lab training levels", () => {
     const html = renderToStaticMarkup(<TrainingApp />);
 
     expect(html).toContain("Created by Dr Shane Turner");
-    expect(html).toContain("Version 2.0.0");
+    expect(html).toContain("Version 2.0.1");
     expect(html).toContain("Updated July 13, 2026");
     expect(html).toContain("© 2026 Dr Shane Turner. All rights reserved.");
   });

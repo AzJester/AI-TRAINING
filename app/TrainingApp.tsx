@@ -57,7 +57,7 @@ interface TrainingProgress {
 
 const STORAGE_KEY = "ai-practice-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "ai-practice-lab-progress-v1";
-const APP_VERSION = "2.0.0";
+const APP_VERSION = "2.0.1";
 const APP_UPDATED = "July 13, 2026";
 
 const DEFAULT_PROGRESS: TrainingProgress = {
