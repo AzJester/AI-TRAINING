@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ai-training.st-dba.com"),
   title: {
     default: "AI Practice Lab",
     template: "%s · AI Practice Lab",
@@ -14,11 +15,20 @@ export const metadata: Metadata = {
     description:
       "Think CLEAR. Work responsibly. Practical AI training for mission and business teams.",
     type: "website",
+    images: [
+      {
+        url: "/og-skills.png",
+        width: 1200,
+        height: 630,
+        alt: "AI Practice Lab with a three-stage build, test, and govern learning path",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "AI Practice Lab",
     description: "Think CLEAR. Work responsibly.",
+    images: ["/og-skills.png"],
   },
 };
 

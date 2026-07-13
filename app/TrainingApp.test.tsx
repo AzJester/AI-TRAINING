@@ -77,6 +77,8 @@ describe("AI Practice Lab training levels", () => {
     const html = renderToStaticMarkup(<TrainingApp />);
 
     expect(html).toContain("Created by Dr Shane Turner");
+    expect(html).toContain("Version 2.0.0");
+    expect(html).toContain("Updated July 13, 2026");
     expect(html).toContain("© 2026 Dr Shane Turner. All rights reserved.");
   });
 
@@ -125,6 +127,18 @@ describe("AI Practice Lab training levels", () => {
     expect(source).toMatch(
       /window\.localStorage\.setItem\([\s\S]*?JSON\.stringify\(\{ \.\.\.progress, lastVisitedAt:/,
     );
+  });
+
+  it("preserves prior Skills progress while moving into the expanded pathway", async () => {
+    const source = await readFile(TRAINING_APP_SOURCE, "utf8");
+
+    expect(source).toContain('studioCompleted.includes("codex-skills")');
+    expect(source).toContain(
+      'studioCompleted.push("chatgpt-skills-beginner")',
+    );
+    expect(source).toContain('"chatgpt-skills"');
+    expect(source).toContain('studioCompleted.includes("codex-skills")');
+    expect(source).toContain("currentCreatorCompleted + legacySkillsCredit");
   });
 
   it("keeps the onboarding brand mark in normal flow at mobile and tablet widths", async () => {

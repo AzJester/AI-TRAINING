@@ -57,6 +57,8 @@ interface TrainingProgress {
 
 const STORAGE_KEY = "ai-practice-lab-progress-v2";
 const LEGACY_STORAGE_KEY = "ai-practice-lab-progress-v1";
+const APP_VERSION = "2.0.0";
+const APP_UPDATED = "July 13, 2026";
 
 const DEFAULT_PROGRESS: TrainingProgress = {
   version: 2,
@@ -115,6 +117,17 @@ const NAV_ITEMS: Array<{ id: View; label: string; icon: string }> = [
   { id: "practice", label: "Practice", icon: "03" },
   { id: "progress", label: "Progress", icon: "04" },
   { id: "resources", label: "Resources", icon: "05" },
+];
+
+const CREATOR_STUDIO_LAB_IDS = [
+  "model-selector",
+  "custom-gpt",
+  "chatgpt-skills",
+  "image-prompts",
+  "role-use-cases",
+  "template-library",
+  "safe-data",
+  "ai-updates",
 ];
 
 function readProgress(): TrainingProgress {
@@ -196,6 +209,16 @@ function readProgress(): TrainingProgress {
     const targetLevel =
       ALL_COURSE_MODULES.find((module) => module.id === currentTarget)?.levelId ??
       ALL_CAPSTONES.find((capstone) => capstone.id === currentTarget)?.levelId;
+    const studioCompleted = Array.isArray(parsed.studioCompleted)
+      ? [...new Set(parsed.studioCompleted.map(String))]
+      : [];
+
+    if (
+      studioCompleted.includes("codex-skills") &&
+      !studioCompleted.includes("chatgpt-skills-beginner")
+    ) {
+      studioCompleted.push("chatgpt-skills-beginner");
+    }
 
     return {
       ...DEFAULT_PROGRESS,
@@ -219,9 +242,7 @@ function readProgress(): TrainingProgress {
         parsed.quizScores && typeof parsed.quizScores === "object"
           ? (parsed.quizScores as Record<string, number>)
           : {},
-      studioCompleted: Array.isArray(parsed.studioCompleted)
-        ? [...new Set(parsed.studioCompleted.map(String))]
-        : [],
+      studioCompleted,
       bookmarks: Array.isArray(parsed.bookmarks)
         ? [...new Set(parsed.bookmarks.map(String))]
         : [],
@@ -503,7 +524,7 @@ export function TrainingApp() {
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AI Practice Lab Certificate</title><style>
 body{margin:0;background:#f4f3f7;color:#1f2537;font-family:Segoe UI,Arial,sans-serif}.certificate{box-sizing:border-box;max-width:1000px;min-height:700px;margin:40px auto;border:12px solid #442c81;background:#fff;padding:70px;text-align:center;box-shadow:0 20px 60px rgba(31,37,55,.15)}.mark{display:grid;width:72px;height:72px;margin:0 auto 28px;place-items:center;border-radius:20px 20px 6px 20px;background:#29aae1;color:#1f2537;font-weight:900}.eyebrow{color:#442c81;font-size:13px;font-weight:800;letter-spacing:.18em;text-transform:uppercase}h1{margin:18px 0;font-size:52px}h2{margin:20px 0 8px;color:#442c81;font-size:30px}.role{color:#66677a}.rule{width:120px;height:5px;margin:34px auto;background:#29aae1}.footer{display:flex;justify-content:space-between;gap:20px;margin-top:60px;border-top:1px solid #ced4da;padding-top:20px;color:#66677a;font-size:13px}@media print{body{background:#fff}.certificate{margin:0;box-shadow:none}}
-</style></head><body><main class="certificate"><div class="mark">AI</div><p class="eyebrow">Certificate of completion</p><h1>${learnerName}</h1><p>has completed the</p><h2>${levelName}: ${levelTitle}</h2><p class="role">Role path: ${role}</p><div class="rule"></div><p>Applied the CLEAR framework through five lessons and a workplace capstone.</p><div class="footer"><span>Completed ${completedOn}</span><span>Created by Dr Shane Turner<br>&copy; 2026 Dr Shane Turner</span></div></main></body></html>`;
+</style></head><body><main class="certificate"><div class="mark">AI</div><p class="eyebrow">Certificate of completion</p><h1>${learnerName}</h1><p>has completed the</p><h2>${levelName}: ${levelTitle}</h2><p class="role">Role path: ${role}</p><div class="rule"></div><p>Applied the CLEAR framework through five lessons and a workplace capstone.</p><div class="footer"><span>Completed ${completedOn}<br>Version ${APP_VERSION} | Updated ${APP_UPDATED}</span><span>Created by Dr Shane Turner<br>&copy; 2026 Dr Shane Turner</span></div></main></body></html>`;
     const url = URL.createObjectURL(
       new Blob([certificate], { type: "text/html;charset=utf-8" }),
     );
@@ -724,6 +745,7 @@ body{margin:0;background:#f4f3f7;color:#1f2537;font-family:Segoe UI,Arial,sans-s
 
         <footer className="app-footer">
           <strong>Created by Dr Shane Turner</strong>
+          <span>Version {APP_VERSION} | Updated {APP_UPDATED}</span>
           <span>© 2026 Dr Shane Turner. All rights reserved.</span>
         </footer>
 
@@ -2160,6 +2182,18 @@ function ProgressPage({
   );
   const capstoneComplete = progress.completedCapstones.includes(level.capstone.id);
   const levelComplete = isLevelComplete(progress, level);
+  const currentCreatorCompleted = CREATOR_STUDIO_LAB_IDS.filter((id) =>
+    progress.studioCompleted.includes(id),
+  ).length;
+  const legacySkillsCredit =
+    progress.studioCompleted.includes("codex-skills") &&
+    !progress.studioCompleted.includes("chatgpt-skills")
+      ? 1
+      : 0;
+  const creatorCompleted = Math.min(
+    CREATOR_STUDIO_LAB_IDS.length,
+    currentCreatorCompleted + legacySkillsCredit,
+  );
 
   return (
     <div className="page standard-page progress-page">
@@ -2227,8 +2261,8 @@ function ProgressPage({
           moduleTotal={ALL_COURSE_MODULES.length}
           capstonesCompleted={progress.completedCapstones.length}
           capstoneTotal={ALL_CAPSTONES.length}
-          creatorCompleted={progress.studioCompleted.length}
-          creatorTotal={8}
+          creatorCompleted={creatorCompleted}
+          creatorTotal={CREATOR_STUDIO_LAB_IDS.length}
           quizScores={progress.quizScores}
           bookmarksCount={progress.bookmarks.length}
           onExport={onExport}

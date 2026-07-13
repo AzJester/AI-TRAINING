@@ -1,5 +1,7 @@
 # AI Practice Lab
 
+Current release: Version 2.0.0, updated July 13, 2026.
+
 AI Practice Lab is an interactive, self-paced course for people who want to use
 AI confidently at work. Three training levels use short lessons, realistic
 exercises, and practical capstones to turn AI guidance into repeatable habits.
@@ -24,8 +26,9 @@ added and the hosting certificate becomes active.
 - Work through 15 focused lessons and three practical capstones.
 - Learn the **CLEAR** framework: Clarify, Limit, Engineer, Assess, and Refine.
 - Practice with guided exercises and immediate, rule-based feedback.
-- Use Creator Studio to select models, design Custom GPT instructions, build a
-  `SKILL.md`, compose image prompts, and explore role-based examples.
+- Use Creator Studio to select models, design Custom GPT instructions, build
+  and test a reusable ChatGPT Skill, compose image prompts, and explore
+  role-based examples.
 - Search, copy, and bookmark reusable prompt templates.
 - Follow a safe-data decision coach before entering workplace information.
 - Complete an adaptive knowledge check that returns missed concepts for review.
@@ -54,7 +57,7 @@ Creator Studio expands the course into eight local, interactive labs:
 | --- | --- |
 | Model Selector | A model recommendation based on task, surface, speed, cost, and depth |
 | Custom GPT Builder | Structured instructions with purpose, behavior, boundaries, and quality checks |
-| Codex Skills Workshop | A reusable `SKILL.md` file and recommended skill folder structure |
+| ChatGPT Skills Lab | A three-level skill builder, test bench, and governance capstone |
 | Image Prompt Studio | A detailed visual brief for generation or editing |
 | Role Use-Case Gallery | Searchable examples for mission, engineering, cyber, program, and business teams |
 | Prompt Template Library | Searchable, copyable, and bookmarkable prompt structures |
@@ -66,16 +69,46 @@ contracts, legal, human resources, finance, pricing, procurement, program
 management, engineering, software, data, cybersecurity, test, quality,
 security, supply chain, logistics, communications, and operations.
 
+### ChatGPT Skills Lab
+
+The ChatGPT Skills Lab teaches learners how to turn a repeatable job into a
+reusable workflow. It also explains when to use a Skill, a custom GPT, or a
+Project so learners can select the right tool before they start building.
+
+| Level | Learning experience | Result |
+| --- | --- | --- |
+| Beginner | Define the job, inputs, steps, output format, guardrails, and quality checks in a guided `SKILL.md` builder | A role-aware skill draft that can be copied or downloaded |
+| Intermediate | Use a test bench to try expected triggers, non-triggers, edge cases, missing inputs, and unsafe requests | A documented test result and a stronger revision plan |
+| Advanced | Apply ownership, approval, versioning, access, monitoring, and retirement controls, then complete a governance and red-team capstone | A review-ready skill package with risks and mitigations |
+
+Examples adapt to the learner's selected role, including proposals, contracts,
+legal, solutions, engineering, program management, cybersecurity, finance, and
+other mission and business functions. The generated `SKILL.md` can be copied
+or downloaded for review, but the lab does not install, upload, publish, or run
+the Skill in ChatGPT.
+
+The entire experience is a local-only simulation. Builder entries, test-bench
+results, and governance decisions stay in the current visit, while completion
+status remains in the current browser. Completing Skills activities contributes to Creator Studio progress.
+Using **Reset to 0** clears Skills Lab progress with the other saved training
+activities and bookmarks while keeping the selected learner profile.
+
+The curriculum follows these official OpenAI resources:
+
+- [Skills in ChatGPT](https://help.openai.com/en/articles/20001066-skills-in-chatgpt/)
+- [Using skills, OpenAI Academy](https://openai.com/academy/skills/)
+
 ## Current OpenAI guidance
 
 The model and product lessons are dated so users know when to recheck them.
-Guidance in this release was verified on July 12, 2026 against official OpenAI
+Guidance in this release was verified on July 13, 2026 against official OpenAI
 sources:
 
 - [ChatGPT model guidance](https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt)
 - [OpenAI API model catalog](https://developers.openai.com/api/docs/models)
 - [Creating and editing GPTs](https://help.openai.com/en/articles/8554397-creating-a-gpt)
-- [Building Codex Skills](https://developers.openai.com/codex/skills)
+- [Skills in ChatGPT](https://help.openai.com/en/articles/20001066-skills-in-chatgpt/)
+- [Using skills, OpenAI Academy](https://openai.com/academy/skills/)
 - [Image generation guidance](https://developers.openai.com/api/docs/guides/image-generation)
 
 Model access depends on the user's plan, workspace settings, approved tools,

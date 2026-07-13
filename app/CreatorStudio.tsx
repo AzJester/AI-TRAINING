@@ -10,9 +10,9 @@ import {
   PROMPT_TEMPLATES,
   ROLE_USE_CASES,
   SAFE_DATA_QUESTIONS,
-  SKILL_BUILDER_STEPS,
   STUDIO_QUIZ,
 } from "./creator-studio-data";
+import { ChatGPTSkillsLab } from "./ChatGPTSkillsLab";
 import "./creator-studio.css";
 
 interface CreatorStudioProps {
@@ -102,7 +102,7 @@ const SECTION_ITEMS: Array<{
 const LAB_IDS: Record<Exclude<StudioSection, "overview">, string> = {
   models: "model-selector",
   gpts: "custom-gpt",
-  skills: "codex-skills",
+  skills: "chatgpt-skills",
   images: "image-prompts",
   "use-cases": "role-use-cases",
   templates: "template-library",
@@ -159,15 +159,6 @@ function listValue(item: DataRecord, keys: string[]): string[] {
     }
   }
   return [];
-}
-
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 60);
 }
 
 function normalizedModels(): NormalizedModel[] {
@@ -454,13 +445,6 @@ export function CreatorStudio({
   const [gptBoundaries, setGptBoundaries] = useState("Do not invent facts. Do not request restricted data. Label assumptions and require human review.");
   const [gptFormat, setGptFormat] = useState("Start with a concise answer, then provide evidence, assumptions, risks, and next actions.");
 
-  const [skillName, setSkillName] = useState("review-ready-brief");
-  const [skillDescription, setSkillDescription] = useState("Create a concise, evidence-based brief from approved source material and verify it before delivery.");
-  const [skillTriggers, setSkillTriggers] = useState("Use when the user asks for a decision brief, executive summary, or structured recommendation.");
-  const [skillWorkflow, setSkillWorkflow] = useState("1. Confirm the objective and audience.\n2. Inspect approved source material.\n3. Separate facts, assumptions, and gaps.\n4. Draft the brief.\n5. Run the verification checklist.");
-  const [skillReferences, setSkillReferences] = useState("Reference approved templates, policies, and examples only when they are supplied or available in the workspace.");
-  const [skillVerification, setSkillVerification] = useState("Confirm every material claim has a source, remove sensitive details, and flag unresolved gaps for human review.");
-
   const [imageGoal, setImageGoal] = useState("Create a professional concept image for an internal training presentation");
   const [imageSubject, setImageSubject] = useState("a cross-functional team evaluating an AI-assisted workflow");
   const [imageSetting, setImageSetting] = useState("a modern, secure collaboration space with abstract mission displays");
@@ -480,7 +464,18 @@ export function CreatorStudio({
   const [dataClass, setDataClass] = useState("");
   const [approvedTool, setApprovedTool] = useState("");
 
-  const labCount = Object.values(LAB_IDS).filter((id) => completed.includes(id)).length;
+  const currentLabCount = Object.values(LAB_IDS).filter((id) =>
+    completed.includes(id),
+  ).length;
+  const legacySkillsCredit =
+    completed.includes("codex-skills") &&
+    !completed.includes("chatgpt-skills")
+      ? 1
+      : 0;
+  const labCount = Math.min(
+    Object.values(LAB_IDS).length,
+    currentLabCount + legacySkillsCredit,
+  );
   const sectionLabId = section === "overview" ? null : LAB_IDS[section];
 
   const recommendedModel = useMemo(() => {
@@ -522,12 +517,6 @@ export function CreatorStudio({
     () => `# ${gptName || "Custom assistant"}\n\n## Audience\n${gptAudience || "Define the intended users."}\n\n## Purpose\n${gptPurpose || "Define the job this GPT should perform."}\n\n## Operating instructions\n${gptBehavior || "Define how the GPT should gather context and complete the work."}\n\n## Boundaries\n${gptBoundaries || "Define prohibited behavior, data limits, and review requirements."}\n\n## Response format\n${gptFormat || "Define the expected structure and level of detail."}\n\n## Quality checks\n- Distinguish facts from assumptions.\n- Cite or identify the supplied source for material claims.\n- State uncertainty instead of guessing.\n- Require a qualified human to review decisions and deliverables.`,
     [gptAudience, gptBehavior, gptBoundaries, gptFormat, gptName, gptPurpose],
   );
-
-  const skillMarkdown = useMemo(() => {
-    const safeName = slugify(skillName) || "new-skill";
-    const description = skillDescription.replace(/\r?\n/g, " ").replace(/"/g, "'");
-    return `---\nname: ${safeName}\ndescription: "${description}"\n---\n\n# ${safeName}\n\n## When to use\n${skillTriggers}\n\n## Workflow\n${skillWorkflow}\n\n## References and assets\n${skillReferences}\n\n## Verification\n${skillVerification}\n\n## Safety\nUse only approved data and tools. Stop when required information is restricted, missing, or outside the user's authority.`;
-  }, [skillDescription, skillName, skillReferences, skillTriggers, skillVerification, skillWorkflow]);
 
   const imagePrompt = useMemo(
     () => `Goal: ${imageGoal}.\nSubject: ${imageSubject}.\nSetting: ${imageSetting}.\nComposition: ${imageComposition}.\nVisual style: ${imageStyle}.\nColor direction: ${imageColor}.\nText treatment: ${imageText}.\nConstraints: ${imageConstraints}.\nFormat: ${imageAspect}.\nQuality check: professional, accessible, visually coherent, and suitable for the stated audience.`,
@@ -628,16 +617,6 @@ export function CreatorStudio({
       textarea.remove();
     }
     onNotice(`${label} copied.`);
-  }
-
-  function downloadSkill() {
-    const url = URL.createObjectURL(new Blob([skillMarkdown], { type: "text/markdown" }));
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "SKILL.md";
-    link.click();
-    URL.revokeObjectURL(url);
-    onNotice("SKILL.md download prepared.");
   }
 
   function finishLab(id: string, label: string) {
@@ -795,25 +774,12 @@ export function CreatorStudio({
         ) : null}
 
         {section === "skills" ? (
-          <section aria-labelledby="studio-section-heading">
-            <div className="studio-section-head"><div><p className="eyebrow">Codex Skills Workshop</p><h2 id="studio-section-heading" tabIndex={-1}>Package a repeatable workflow</h2><p>A skill combines clear activation guidance, a focused procedure, reusable references, and verification.</p></div>{completionButton("codex-skills", "Codex Skills Workshop")}</div>
-            <aside className="studio-fact-strip">
-              <div><strong>Core structure</strong><p>A skill is a directory with a required SKILL.md file. It can also include scripts, references, assets, and optional agent configuration.</p></div>
-              <a href="https://developers.openai.com/codex/skills" target="_blank" rel="noreferrer">Open official Skills guidance</a>
-            </aside>
-            <GuidanceCards data={SKILL_BUILDER_STEPS} label="Skill building steps" />
-            <div className="studio-builder-grid">
-              <form className="studio-form-card studio-builder-form" onSubmit={(event) => event.preventDefault()}>
-                <label>Skill folder name<input value={skillName} onChange={(event) => setSkillName(event.target.value)} /></label>
-                <label className="studio-field-wide">Description<textarea rows={3} value={skillDescription} onChange={(event) => setSkillDescription(event.target.value)} /></label>
-                <label className="studio-field-wide">When to use<textarea rows={3} value={skillTriggers} onChange={(event) => setSkillTriggers(event.target.value)} /></label>
-                <label className="studio-field-wide">Workflow<textarea rows={6} value={skillWorkflow} onChange={(event) => setSkillWorkflow(event.target.value)} /></label>
-                <label className="studio-field-wide">References and assets<textarea rows={3} value={skillReferences} onChange={(event) => setSkillReferences(event.target.value)} /></label>
-                <label className="studio-field-wide">Verification<textarea rows={3} value={skillVerification} onChange={(event) => setSkillVerification(event.target.value)} /></label>
-              </form>
-              <div className="studio-output-card"><div className="studio-output-head"><div><span>Generated file</span><strong>SKILL.md</strong></div><div><button className="button button-small button-quiet" type="button" onClick={() => copyText(skillMarkdown, "SKILL.md")}>Copy</button><button className="button button-small button-primary" type="button" onClick={downloadSkill}>Download</button></div></div><pre>{skillMarkdown}</pre><div className="studio-file-tree" aria-label="Recommended skill structure"><span>{slugify(skillName) || "new-skill"}/</span><span>├── SKILL.md</span><span>├── references/</span><span>├── scripts/</span><span>└── assets/</span></div></div>
-            </div>
-          </section>
+          <ChatGPTSkillsLab
+            role={role}
+            completed={completed}
+            onComplete={onComplete}
+            onNotice={onNotice}
+          />
         ) : null}
 
         {section === "images" ? (

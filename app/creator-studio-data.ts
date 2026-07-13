@@ -1,4 +1,4 @@
-export const STUDIO_VERIFIED_ON = "2026-07-12";
+export const STUDIO_VERIFIED_ON = "2026-07-13";
 
 export const STUDIO_LOCAL_FIRST_NOTICE =
   "This learning studio runs entirely in the browser. It does not call an AI service, upload content, or validate access to a particular model or workspace.";
@@ -176,6 +176,20 @@ export const OFFICIAL_SOURCES: OfficialSource[] = [
     title: "Creating and editing GPTs",
     url: "https://help.openai.com/en/articles/8554397-creating-a-gpt",
     appliesTo: ["Custom GPT builder", "instructions", "knowledge", "capabilities"],
+    verifiedOn: STUDIO_VERIFIED_ON,
+  },
+  {
+    id: "chatgpt-skills",
+    title: "Skills in ChatGPT",
+    url: "https://help.openai.com/en/articles/20001066-skills-in-chatgpt/",
+    appliesTo: ["ChatGPT Skills", "installation", "sharing", "workspace controls"],
+    verifiedOn: STUDIO_VERIFIED_ON,
+  },
+  {
+    id: "skills-academy",
+    title: "Using skills",
+    url: "https://openai.com/academy/skills/",
+    appliesTo: ["repeatable workflows", "SKILL.md", "testing", "role examples"],
     verifiedOn: STUDIO_VERIFIED_ON,
   },
   {
@@ -1498,17 +1512,17 @@ export const STUDIO_QUIZ: StudioQuizQuestion[] = [
   },
   {
     id: "quiz-skill-entry",
-    topic: "Codex skills",
+    topic: "ChatGPT Skills",
     difficulty: "Intermediate",
-    prompt: "What is the required entry file in a Codex skill directory?",
+    prompt: "Which description best matches a ChatGPT Skill?",
     options: [
-      { id: "a", label: "README.pdf" },
-      { id: "b", label: "SKILL.md" },
-      { id: "c", label: "index.html" },
-      { id: "d", label: "credentials.json" },
+      { id: "a", label: "A one-time prompt with no reusable workflow" },
+      { id: "b", label: "A reusable workflow that guides ChatGPT through a specific task" },
+      { id: "c", label: "A folder for storing credentials" },
+      { id: "d", label: "A replacement for qualified human review" },
     ],
     correctOptionId: "b",
-    explanation: "A skill uses SKILL.md as its required entry point, with optional scripts, references, assets, and configuration when useful.",
+    explanation: "A ChatGPT Skill is a reusable workflow for a specific task. It can include instructions, examples, code, and supporting resources.",
     remediationSection: "skills",
     nextOnCorrect: "quiz-image-accuracy",
     nextOnIncorrect: "quiz-gpt-knowledge",
@@ -1598,15 +1612,15 @@ export const AI_UPDATES: AIUpdate[] = [
     verifiedOn: STUDIO_VERIFIED_ON,
   },
   {
-    id: "update-codex-skills",
+    id: "update-chatgpt-skills",
     date: STUDIO_VERIFIED_ON,
-    title: "Codex skills package repeatable workflows",
-    summary: "A skill uses a required SKILL.md file and can include scripts, references, assets, and agent configuration for reliable reuse.",
-    whyItMatters: "Teams can turn an approved expert workflow into a discoverable, testable operating pattern instead of rewriting instructions each time.",
-    actions: ["Define a narrow trigger", "Write ordered steps and boundaries", "Add only useful support material", "Test explicit and natural-language invocation"],
-    availability: "Skill support and management options can vary by Codex surface and organization policy. Check current Codex documentation and local configuration.",
-    sourceId: "codex-skills",
-    sourceUrl: "https://developers.openai.com/codex/skills",
+    title: "ChatGPT Skills turn repeatable work into reusable workflows",
+    summary: "Skills can include instructions, examples, code, and supporting resources, then be installed and used when relevant.",
+    whyItMatters: "Teams can turn an approved expert workflow into a discoverable, testable pattern instead of rewriting the process each time.",
+    actions: ["Choose a narrow repeatable task", "Define inputs, steps, outputs, and checks", "Test normal and unsafe cases", "Review permissions before sharing"],
+    availability: "Access, creation, installation, and sharing depend on the ChatGPT plan and workspace administrator settings. Personal Skills are added separately across product surfaces.",
+    sourceId: "chatgpt-skills",
+    sourceUrl: "https://help.openai.com/en/articles/20001066-skills-in-chatgpt/",
     verifiedOn: STUDIO_VERIFIED_ON,
   },
 ];

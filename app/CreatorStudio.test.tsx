@@ -13,6 +13,9 @@ const STUDIO_AND_INSTRUCTOR_SOURCES = [
   new URL("./CreatorStudio.tsx", import.meta.url),
   new URL("./creator-studio.css", import.meta.url),
   new URL("./creator-studio-data.ts", import.meta.url),
+  new URL("./ChatGPTSkillsLab.tsx", import.meta.url),
+  new URL("./chatgpt-skills-lab.css", import.meta.url),
+  new URL("./chatgpt-skills-data.ts", import.meta.url),
   new URL("./InstructorPanel.tsx", import.meta.url),
   new URL("./instructor-panel.css", import.meta.url),
 ];
@@ -41,6 +44,8 @@ const EXPECTED_OFFICIAL_URLS = [
   "https://developers.openai.com/api/docs/guides/latest-model",
   "https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt",
   "https://help.openai.com/en/articles/8554397-creating-a-gpt",
+  "https://help.openai.com/en/articles/20001066-skills-in-chatgpt/",
+  "https://openai.com/academy/skills/",
   "https://developers.openai.com/codex/skills",
   "https://developers.openai.com/api/docs/guides/image-generation",
 ];
@@ -68,6 +73,16 @@ describe("Creator Studio", () => {
     expect(PROMPT_TEMPLATES.length).toBeGreaterThanOrEqual(18);
   });
 
+  it("preserves prior Skills credit while learners complete the expanded pathway", async () => {
+    const source = await readFile(
+      new URL("./CreatorStudio.tsx", import.meta.url),
+      "utf8",
+    );
+
+    expect(source).toContain('completed.includes("codex-skills")');
+    expect(source).toContain("currentLabCount + legacySkillsCredit");
+  });
+
   it("includes the current model set", () => {
     const modelNames = MODEL_CHOICES.map((model) => model.name);
 
@@ -82,7 +97,11 @@ describe("Creator Studio", () => {
     expect(
       sourceUrls.every((url) => {
         const hostname = new URL(url).hostname;
-        return hostname === "developers.openai.com" || hostname === "help.openai.com";
+        return (
+          hostname === "developers.openai.com" ||
+          hostname === "help.openai.com" ||
+          hostname === "openai.com"
+        );
       }),
     ).toBe(true);
   });
