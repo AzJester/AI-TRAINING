@@ -1,4 +1,4 @@
-export const STUDIO_VERIFIED_ON = "2026-07-13";
+export const STUDIO_VERIFIED_ON = "2026-07-18";
 
 export const STUDIO_LOCAL_FIRST_NOTICE =
   "This learning studio runs entirely in the browser. It does not call an AI service, upload content, or validate access to a particular model or workspace.";

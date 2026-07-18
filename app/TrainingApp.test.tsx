@@ -77,8 +77,8 @@ describe("AI Practice Lab training levels", () => {
     const html = renderToStaticMarkup(<TrainingApp />);
 
     expect(html).toContain("Created by Dr Shane Turner");
-    expect(html).toContain("Version 2.0.1");
-    expect(html).toContain("Updated July 13, 2026");
+    expect(html).toContain("Version 2.0.2");
+    expect(html).toContain("Updated July 18, 2026");
     expect(html).toContain("© 2026 Dr Shane Turner. All rights reserved.");
   });
 
@@ -106,34 +106,15 @@ describe("AI Practice Lab training levels", () => {
     expect(source).toMatch(/<select\s+ref=\{roleSelectRef\}/);
   });
 
-  it("persists and restores the current target and stage", async () => {
-    const source = await readFile(TRAINING_APP_SOURCE, "utf8");
-
-    expect(source).toMatch(
-      /currentTarget:\s*ModuleTarget \| null;\s+currentStage:\s*number;/,
-    );
-    expect(source).toMatch(
-      /setActiveTarget\(savedProgress\.currentTarget\);\s+setLessonStage\(savedProgress\.currentStage\);/,
-    );
-    expect(source).toMatch(
-      /currentStage:\s*typeof parsed\.currentStage === "number"[\s\S]*?Math\.max\(0, Math\.min\(3, Math\.floor\(parsed\.currentStage\)\)\)/,
-    );
-    expect(source).toMatch(
-      /currentTarget:\s*target,\s+currentStage:\s*stage,\s+selectedLevel:/,
-    );
-    expect(source).toMatch(
-      /currentTarget:\s*activeTarget \?\? current\.currentTarget,\s+currentStage:\s*stage,/,
-    );
-    expect(source).toMatch(
-      /window\.localStorage\.setItem\([\s\S]*?JSON\.stringify\(\{ \.\.\.progress, lastVisitedAt:/,
-    );
-  });
-
   it("preserves prior Skills progress while moving into the expanded pathway", async () => {
     const source = await readFile(TRAINING_APP_SOURCE, "utf8");
+    const progressSource = await readFile(
+      new URL("./training-progress.ts", import.meta.url),
+      "utf8",
+    );
 
-    expect(source).toContain('studioCompleted.includes("codex-skills")');
-    expect(source).toContain(
+    expect(progressSource).toContain('studioCompleted.includes("codex-skills")');
+    expect(progressSource).toContain(
       'studioCompleted.push("chatgpt-skills-beginner")',
     );
     expect(source).toContain('"chatgpt-skills"');

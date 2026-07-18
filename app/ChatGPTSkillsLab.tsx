@@ -127,7 +127,7 @@ export function ChatGPTSkillsLab({
     `${initialProject.job} Use when the user asks for this repeatable work product and supplies approved inputs.`,
   );
   const [requiredInputs, setRequiredInputs] = useState(initialProject.inputs);
-  const [workflow, setWorkflow] = useState(numberedWorkflow(initialProject));
+  const [workflow, setWorkflow] = useState(() => numberedWorkflow(initialProject));
   const [outputFormat, setOutputFormat] = useState(initialProject.output);
   const [qualityChecks, setQualityChecks] = useState(
     "Confirm required sections are present, trace material claims to supplied sources, label assumptions, show unresolved gaps, and verify the output with a qualified human.",

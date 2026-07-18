@@ -13,6 +13,15 @@ if errorlevel 1 (
   exit /b 1
 )
 
+node scripts\check-node-version.mjs
+if errorlevel 1 (
+  echo.
+  echo Install a current Node.js release, then double-click this file again.
+  echo.
+  pause
+  exit /b 1
+)
+
 where npm >nul 2>nul
 if errorlevel 1 (
   echo.
@@ -24,7 +33,7 @@ if errorlevel 1 (
 
 if not exist "node_modules" (
   echo Preparing AI Practice Lab for first use...
-  call npm install
+  call npm ci
   if errorlevel 1 (
     echo.
     echo Setup did not finish. Review the message above, then try again.

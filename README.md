@@ -1,6 +1,6 @@
 # AI Practice Lab
 
-Current release: Version 2.0.1, updated July 13, 2026.
+Current release: Version 2.0.2, updated July 18, 2026.
 
 AI Practice Lab is an interactive, self-paced course for people who want to use
 AI confidently at work. Three training levels use short lessons, realistic
@@ -101,7 +101,7 @@ The curriculum follows these official OpenAI resources:
 ## Current OpenAI guidance
 
 The model and product lessons are dated so users know when to recheck them.
-Guidance in this release was verified on July 13, 2026 against official OpenAI
+Guidance in this release was verified on July 18, 2026 against official OpenAI
 sources:
 
 - [ChatGPT model guidance](https://help.openai.com/en/articles/20001354-gpt-56-in-chatgpt)

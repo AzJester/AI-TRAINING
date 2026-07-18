@@ -1,4 +1,4 @@
-export const CHATGPT_SKILLS_VERIFIED_ON = "2026-07-13";
+export const CHATGPT_SKILLS_VERIFIED_ON = "2026-07-18";
 
 export type SkillLevelId = "beginner" | "intermediate" | "advanced";
 
