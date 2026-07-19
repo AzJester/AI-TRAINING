@@ -31,6 +31,7 @@
   position: relative;
   z-index: 1;
   display: flex;
+  flex-wrap: wrap;
   align-items: end;
   justify-content: space-between;
   gap: 28px;
@@ -47,11 +48,13 @@
 }
 
 .level-selector-heading > p {
-  max-width: 420px;
+  max-width: none;
+  margin-left: auto;
   margin-bottom: 2px;
   color: var(--muted);
   font-size: 0.84rem;
   text-align: right;
+  white-space: nowrap;
 }
 
 .level-selector fieldset {

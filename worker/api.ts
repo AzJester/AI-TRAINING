@@ -18,6 +18,8 @@ type JsonRecord = Record<string, unknown>;
 
 const AUTH_EMAIL_HEADER = "oai-authenticated-user-email";
 const AUTH_NAME_HEADER = "oai-authenticated-user-full-name";
+const AUTH_NAME_ENCODING_HEADER = "oai-authenticated-user-full-name-encoding";
+const AUTH_NAME_ENCODING = "percent-encoded-utf-8";
 const MAX_REQUEST_BYTES = 128_000;
 const REPORT_PRIVACY_THRESHOLD = 5;
 const LEVELS = new Set(["beginner", "intermediate", "advanced"]);
@@ -159,7 +161,12 @@ export async function accountUser(
   const email = request.headers.get(AUTH_EMAIL_HEADER)?.trim().toLowerCase();
   if (!email) return null;
   const encodedName = request.headers.get(AUTH_NAME_HEADER);
-  const fullName = encodedName ? safeDecode(encodedName) ?? encodedName : null;
+  const fullName =
+    encodedName &&
+    request.headers.get(AUTH_NAME_ENCODING_HEADER)?.toLowerCase() ===
+      AUTH_NAME_ENCODING
+      ? safeDecode(encodedName)
+      : null;
   return {
     displayName: fullName?.trim().slice(0, 80) || "Signed-in learner",
     userId: await hmacSha256(`v1:${email}`, identitySecret),

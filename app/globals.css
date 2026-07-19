@@ -711,7 +711,9 @@ main {
 
   .level-selector-heading > p {
     max-width: none;
+    margin-left: 0;
     text-align: left;
+    white-space: normal;
   }
 
   .level-options {

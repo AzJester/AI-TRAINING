@@ -72,6 +72,13 @@
   color: var(--muted);
 }
 
+.account-sync-panel .sync-identity-note {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
 .sync-actions {
   display: flex;
   align-items: center;

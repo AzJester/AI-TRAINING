@@ -31,6 +31,15 @@ test("renders without horizontal overflow at every responsive breakpoint", async
       await expect(
         page.getByRole("complementary", { name: "Primary navigation" }),
       ).toBeVisible();
+
+      const outcomeLineCount = await page
+        .locator(".level-selector-heading > p")
+        .evaluate((outcome) => {
+          const range = document.createRange();
+          range.selectNodeContents(outcome);
+          return range.getClientRects().length;
+        });
+      expect(outcomeLineCount).toBe(1);
     }
   }
 });

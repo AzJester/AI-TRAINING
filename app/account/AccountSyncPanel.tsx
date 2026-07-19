@@ -581,6 +581,13 @@ export function AccountSyncPanel({
         )}
       </div>
 
+      <p className="sync-identity-note">
+        ChatGPT verifies your identity only. This site does not persist your
+        account email or name; it saves a private account identifier and
+        minimized progress only after you enable sync. No chat or model request
+        is created, so this does not use ChatGPT messages or model credits.
+      </p>
+
       {account.signedIn ? (
         <div className="sync-actions">
           {syncMode === "account" ? (

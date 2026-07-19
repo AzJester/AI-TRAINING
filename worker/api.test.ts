@@ -250,6 +250,7 @@ describe("account identity and privacy aggregation", () => {
         headers: {
           "oai-authenticated-user-email": "  LEARNER@Example.com ",
           "oai-authenticated-user-full-name": "Ren%C3%A9e%20Learner",
+          "oai-authenticated-user-full-name-encoding": "percent-encoded-utf-8",
         },
       }),
       "unit-test-only-secret",
@@ -258,6 +259,20 @@ describe("account identity and privacy aggregation", () => {
     expect(identity?.displayName).toBe("Renée Learner");
     expect(identity?.userId).toMatch(/^[a-f0-9]{64}$/);
     expect(JSON.stringify(identity)).not.toContain("learner@example.com");
+  });
+
+  it("ignores an optional display name when its encoding is not confirmed", async () => {
+    const identity = await accountUser(
+      new Request("https://example.test/api/account-sync", {
+        headers: {
+          "oai-authenticated-user-email": "learner@example.com",
+          "oai-authenticated-user-full-name": "Untrusted%20Name",
+        },
+      }),
+      "unit-test-only-secret",
+    );
+
+    expect(identity?.displayName).toBe("Signed-in learner");
   });
 
   it("suppresses reports until five learners have synced", () => {

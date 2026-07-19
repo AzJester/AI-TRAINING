@@ -45,6 +45,9 @@ describe("account sync privacy controls", () => {
     expect(signIn.getAttribute("href")).toBe(
       "/signin-with-chatgpt?return_to=%2F",
     );
+    expect(
+      screen.getByText(/No chat or model request is created/i),
+    ).toBeTruthy();
     expect(fetch).not.toHaveBeenCalled();
   });
 
