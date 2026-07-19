@@ -1,0 +1,239 @@
+/* Lesson player */
+
+.lesson-page {
+  min-height: 100vh;
+}
+
+.lesson-topbar {
+  position: sticky;
+  z-index: 15;
+  top: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 20px;
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  background: rgba(246, 242, 233, 0.93);
+  padding: 14px 32px 10px;
+  backdrop-filter: blur(16px);
+}
+
+.lesson-progress-copy {
+  display: flex;
+  gap: 18px;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.lesson-progress-copy strong {
+  color: var(--ink);
+}
+
+.lesson-progress-track {
+  grid-column: 1 / -1;
+  height: 3px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: var(--line);
+}
+
+.lesson-layout {
+  display: grid;
+  width: min(1120px, calc(100% - 64px));
+  grid-template-columns: minmax(0, 760px) 250px;
+  gap: 80px;
+  margin: 0 auto;
+  padding: 64px 0 100px;
+}
+
+.lesson-content > h1,
+.capstone-content > h1 {
+  margin-bottom: 16px;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+}
+
+.lesson-lede {
+  margin-bottom: 42px;
+  color: var(--muted);
+  font-size: 1.13rem;
+}
+
+.lesson-outline {
+  position: sticky;
+  top: 112px;
+  align-self: start;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.lesson-outline ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lesson-outline li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 9px;
+  color: var(--muted);
+  padding: 8px;
+  font-size: 0.84rem;
+}
+
+.lesson-outline li > span {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.lesson-outline li.is-current {
+  background: var(--cobalt-soft);
+  color: var(--cobalt-dark);
+  font-weight: 750;
+}
+
+.lesson-outline li.is-current > span {
+  border-color: var(--cobalt);
+  background: var(--cobalt);
+  color: #fff;
+}
+
+.lesson-outline li.is-done {
+  color: var(--green);
+}
+
+.lesson-outline li.is-done > span {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+
+.lesson-skill {
+  margin-top: 18px;
+  border-radius: 12px;
+  background: var(--lime-soft);
+  padding: 14px;
+}
+
+.lesson-skill span,
+.lesson-skill strong {
+  display: block;
+}
+
+.lesson-skill span {
+  color: var(--muted);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lesson-skill strong {
+  margin-top: 3px;
+  font-size: 0.88rem;
+}
+
+.lesson-blocks {
+  display: grid;
+  gap: 18px;
+}
+
+.objective-card,
+.concept-card,
+.scenario-banner,
+.source-pack,
+.draft-box,
+.starter-prompt,
+.model-response {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.objective-card {
+  border-left: 5px solid var(--lime);
+  padding: 24px 26px;
+}
+
+.objective-card ul {
+  display: grid;
+  gap: 7px;
+  margin: 12px 0 0;
+  padding-left: 20px;
+}
+
+.concept-card {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 22px;
+  padding: 30px;
+}
+
+.concept-index {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border-radius: 12px 12px 3px 12px;
+  background: var(--ink);
+  color: var(--lime);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.concept-card h2 {
+  margin-bottom: 12px;
+  font-size: 1.55rem;
+}
+
+.concept-card p {
+  margin-bottom: 0;
+  color: var(--ink-2);
+}
+
+.example-box {
+  margin-top: 20px;
+  border-radius: 12px;
+  background: var(--paper);
+  padding: 16px 18px;
+}
+
+.example-box span {
+  color: var(--cobalt);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.example-box p {
+  margin-top: 5px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.83rem;
+}
+
+.lesson-continue {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 10px;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+}
+
+.lesson-continue p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}

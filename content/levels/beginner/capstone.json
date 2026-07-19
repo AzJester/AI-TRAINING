@@ -1,0 +1,78 @@
+{
+  "id": "beginner-capstone",
+  "levelId": "beginner",
+  "number": 6,
+  "title": "Capstone: Build a recommendation you can defend",
+  "minutes": 15,
+  "description": "Apply all five CLEAR moves to a realistic workplace request with incomplete evidence and real tradeoffs.",
+  "outcome": "You can produce a concise, evidence-bounded recommendation and a transparent human handoff.",
+  "scenario": "You coordinate a 30-person customer success team. A director asks, “Use AI to decide whether we should replace the weekly all-hands meeting with an async update starting next month.” You may use AI to analyze the supplied, de-identified information, but the director owns the decision.",
+  "sourcePack": [
+    "The weekly meeting is scheduled for 45 minutes; average attendance over eight weeks was 23 people.",
+    "A pulse survey received 19 responses: 12 prefer async, 4 prefer a shorter live meeting, and 3 prefer the current format.",
+    "Six respondents said live discussion helps surface cross-team blockers; five said time-zone conflicts make attendance difficult.",
+    "Two accessibility-related comments request transcripts and predictable agendas. Do not reproduce individual comment wording.",
+    "No data is available on whether the meeting affects response time, retention, or customer outcomes.",
+    "The team can run a four-week experiment. The director wants a recommendation by Friday."
+  ],
+  "stages": [
+    {
+      "step": "clarify",
+      "title": "Clarify the decision",
+      "prompt": "State the audience, the decision due Friday, the deliverable, and what a useful recommendation must enable.",
+      "deliverable": "A one-sentence task brief with concrete success criteria."
+    },
+    {
+      "step": "limit",
+      "title": "Set the boundaries",
+      "prompt": "Identify information you will exclude or minimize, claims the evidence cannot support, and the human owner.",
+      "deliverable": "Three guardrails and one named decision owner."
+    },
+    {
+      "step": "engineer",
+      "title": "Build the prompt",
+      "prompt": "Create a structured prompt using only the source pack. Require a concise recommendation, alternatives, evidence, limitations, and experiment measures.",
+      "deliverable": "A reusable prompt with role, task, source, constraints, and output format."
+    },
+    {
+      "step": "assess",
+      "title": "Test the answer",
+      "prompt": "List the claims you would verify, the missing perspectives or data, and one way the answer could mislead the director.",
+      "deliverable": "A risk-based review checklist tied to this decision."
+    },
+    {
+      "step": "refine",
+      "title": "Make the handoff",
+      "prompt": "Revise the result into an owned next step. Include uncertainty, accessibility, an experiment, decision criteria, and the final approver.",
+      "deliverable": "A short recommendation plus a transparent AI-assistance note."
+    }
+  ],
+  "rubric": [
+    {
+      "id": "grounded",
+      "label": "Grounded",
+      "description": "Every factual claim can be traced to the source pack, and missing evidence is visible."
+    },
+    {
+      "id": "bounded",
+      "label": "Bounded",
+      "description": "The response protects individual comments, avoids unsupported causal claims, and keeps the decision with the director."
+    },
+    {
+      "id": "useful",
+      "label": "Decision-useful",
+      "description": "The recommendation presents tradeoffs, a realistic next step, and criteria for evaluating it."
+    },
+    {
+      "id": "inclusive",
+      "label": "Inclusive",
+      "description": "Time-zone, discussion, transcript, and predictable-agenda needs are considered."
+    },
+    {
+      "id": "owned",
+      "label": "Owned",
+      "description": "Sources, AI assistance, limitations, human edits, and final approval are clear."
+    }
+  ],
+  "modelResponse": "Recommend a four-week, reversible experiment rather than an immediate permanent replacement. Publish a structured async update each week and hold a 25-minute live blocker forum with a predictable agenda, transcript, and rotating time slot. This direction reflects the 12 of 19 respondents who prefer async while preserving live discussion for the six respondents who value cross-team blocker discovery. The survey is incomplete and does not measure customer or retention outcomes, so it cannot prove that either format improves performance. During the experiment, track participation, unresolved blockers, time spent, accessibility feedback, and a short end-of-pilot pulse. The director should review results and make the final format decision. AI assistance note: AI was used to structure the supplied de-identified evidence and draft options; the coordinator verified all figures, added limitations and accessibility criteria, and the director owns approval."
+}

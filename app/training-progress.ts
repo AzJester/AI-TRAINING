@@ -25,6 +25,7 @@ export interface TrainingProgress {
   bookmarks: string[];
   currentTarget: ModuleTarget | null;
   currentStage: number;
+  resetEpoch: number;
   lastVisitedAt: string | null;
 }
 
@@ -62,6 +63,7 @@ export const DEFAULT_PROGRESS: TrainingProgress = {
   bookmarks: [],
   currentTarget: null,
   currentStage: 0,
+  resetEpoch: 0,
   lastVisitedAt: null,
 };
 
@@ -171,6 +173,10 @@ export function readProgress(storage: Storage | undefined): TrainingProgress {
       currentStage:
         typeof parsed.currentStage === "number" && Number.isFinite(parsed.currentStage)
           ? Math.max(0, Math.min(3, Math.floor(parsed.currentStage)))
+          : 0,
+      resetEpoch:
+        typeof parsed.resetEpoch === "number" && Number.isFinite(parsed.resetEpoch)
+          ? Math.max(0, Math.floor(parsed.resetEpoch))
           : 0,
       lastVisitedAt:
         typeof parsed.lastVisitedAt === "string" ? parsed.lastVisitedAt : null,

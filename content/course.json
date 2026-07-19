@@ -1,0 +1,85 @@
+{
+  "course": {
+    "title": "AI at Work: Think Clearly, Work Responsibly",
+    "shortTitle": "AI at Work",
+    "description": "A three-level, hands-on pathway for using AI responsibly in defense, civilian, space, and business work.",
+    "audience": "Professionals across defense, civilian, space mission, and business functions",
+    "minutes": 180,
+    "levelCount": 3,
+    "moduleCount": 15,
+    "capstoneMinutes": 45,
+    "promise": "Finish with a repeatable method for turning a work task into an AI-assisted result you can stand behind."
+  },
+  "clearSteps": [
+    {
+      "key": "clarify",
+      "letter": "C",
+      "name": "Clarify",
+      "action": "Name the job",
+      "description": "Define the audience, outcome, and success criteria before you open an AI tool."
+    },
+    {
+      "key": "limit",
+      "letter": "L",
+      "name": "Limit",
+      "action": "Set safe boundaries",
+      "description": "Choose appropriate information, tools, and decision boundaries for the task."
+    },
+    {
+      "key": "engineer",
+      "letter": "E",
+      "name": "Engineer",
+      "action": "Build useful context",
+      "description": "Give the model a clear role, relevant source material, constraints, and an output format."
+    },
+    {
+      "key": "assess",
+      "letter": "A",
+      "name": "Assess",
+      "action": "Check before trust",
+      "description": "Test important claims, assumptions, omissions, tone, and fit for the real audience."
+    },
+    {
+      "key": "refine",
+      "letter": "R",
+      "name": "Refine",
+      "action": "Improve and own",
+      "description": "Revise with judgment, document what matters, and keep a human accountable for the result."
+    }
+  ],
+  "levels": [
+    {
+      "id": "beginner",
+      "number": 1,
+      "name": "Beginner",
+      "title": "Use AI with confidence",
+      "description": "Learn the CLEAR habits for framing work, protecting information, prompting well, checking output, and keeping human ownership.",
+      "audience": "Employees beginning to use approved AI tools for everyday workplace tasks",
+      "outcome": "Create a useful AI-assisted result that is safe, grounded, reviewed, and owned.",
+      "minutes": 60,
+      "moduleCount": 5
+    },
+    {
+      "id": "intermediate",
+      "number": 2,
+      "name": "Intermediate",
+      "title": "Build reliable AI workflows",
+      "description": "Move from one-off prompts to decomposed, risk-based, traceable workflows that teams can review and reuse.",
+      "audience": "Practitioners, team leads, analysts, engineers, and functional professionals designing repeatable AI-assisted work",
+      "outcome": "Build a multi-step workflow with controlled inputs, source traceability, human gates, and a reusable handoff.",
+      "minutes": 60,
+      "moduleCount": 5
+    },
+    {
+      "id": "advanced",
+      "number": 3,
+      "name": "Advanced",
+      "title": "Govern and scale AI systems",
+      "description": "Design operating models, enforce governance boundaries, evaluate and challenge systems, assure human control, and scale through evidence.",
+      "audience": "AI program owners, product and platform leads, governance partners, technical authorities, and senior functional leaders",
+      "outcome": "Make a defensible lifecycle decision for an AI system using value, risk, evaluation, control, and operations evidence.",
+      "minutes": 60,
+      "moduleCount": 5
+    }
+  ]
+}

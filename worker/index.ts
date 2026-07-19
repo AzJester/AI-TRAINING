@@ -1,12 +1,16 @@
 /** Cloudflare Worker entry point for the vinext-starter template. */
 import { handleImageOptimization, DEFAULT_DEVICE_SIZES, DEFAULT_IMAGE_SIZES } from "vinext/server/image-optimization";
 import handler from "vinext/server/app-router-entry";
+import { cleanupExpiredAnalytics, handleApiRequest } from "./api";
+import type { D1Database } from "./database";
 
 interface Env {
+  ACCOUNT_HASH_SECRET?: string;
+  ANALYTICS_ADMIN_USER_ID?: string;
   ASSETS: {
     fetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>;
   };
-  DB: unknown;
+  DB?: D1Database;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -66,6 +70,13 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
+    if (env?.DB && request.method === "GET" && url.pathname === "/") {
+      ctx.waitUntil(cleanupExpiredAnalytics(env.DB).catch(() => undefined));
+    }
+
+    const apiResponse = await handleApiRequest(request, env);
+    if (apiResponse) return apiResponse;
+
     if (url.pathname.startsWith("/_next/static/")) {
       const assetResponse = await env.ASSETS.fetch(request);
       return withHeaders(assetResponse, {
@@ -95,6 +106,15 @@ const worker = {
         "max-age=31536000; includeSubDomains";
     }
     return withHeaders(response, headers);
+  },
+  async scheduled(
+    _controller: unknown,
+    env: Env,
+    ctx: ExecutionContext,
+  ): Promise<void> {
+    if (env?.DB) {
+      ctx.waitUntil(cleanupExpiredAnalytics(env.DB).catch(() => undefined));
+    }
   },
 };
 

@@ -35,7 +35,7 @@ test("server-renders the AI Practice Lab course shell", async () => {
   assert.match(html, /\bCLEAR\b/i);
   assert.match(html, /Course path/i);
   assert.match(html, /Created by Dr Shane Turner/i);
-  assert.match(visibleHtml, /Version 2\.0\.2/i);
+  assert.match(visibleHtml, /Version 2\.1\.0/i);
   assert.match(visibleHtml, /Updated July 18, 2026/i);
   assert.match(html, /© 2026 Dr Shane Turner\. All rights reserved\./i);
   assert.match(html, /href="\/favicon\.ico"/i);

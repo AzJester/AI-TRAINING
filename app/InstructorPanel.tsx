@@ -303,13 +303,14 @@ export function InstructorPanel({
         </ol>
       </article>
 
-      <aside className="instructor-privacy" aria-label="Local data notice">
-        <span className="instructor-privacy-mark" aria-hidden="true">LOCAL</span>
+      <aside className="instructor-privacy" aria-label="Privacy notice">
+        <span className="instructor-privacy-mark" aria-hidden="true">PRIVATE</span>
         <div>
-          <strong>Device-only view</strong>
+          <strong>Private by default</strong>
           <p>
-            This panel reads activity saved in this browser. It does not track
-            a team, send data to an API, or provide organization-wide reporting.
+            This panel starts with activity saved in this browser. Account sync,
+            cohort sharing, and anonymous counters stay off until the learner
+            explicitly enables them. Cohort reports never reveal individual rows.
           </p>
         </div>
       </aside>

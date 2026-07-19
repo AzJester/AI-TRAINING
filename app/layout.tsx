@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { PwaRegistration } from "./PwaRegistration";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://ai-training.st-dba.com"),
@@ -10,6 +11,12 @@ export const metadata: Metadata = {
   description:
     "Build practical habits for prompting, checking, and protecting information when you use AI at work.",
   applicationName: "AI Practice Lab",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "AI Practice Lab",
+  },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -56,7 +63,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        {children}
+        <PwaRegistration />
+      </body>
     </html>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "ai-practice-lab",
-  "version": "2.0.2",
+  "version": "2.1.0",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -9,19 +9,26 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
+    "db:generate": "drizzle-kit generate",
     "test": "npm run build && node --test tests/*.test.mjs && npm run test:component",
     "test:component": "vitest run --config vitest.config.ts",
+    "test:e2e": "npm run build && node scripts/run-playwright.mjs",
+    "test:e2e:headed": "npm run build && node scripts/run-playwright.mjs --headed",
+    "test:accessibility": "npm run build && node scripts/run-playwright.mjs tests/e2e/accessibility.spec.ts",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
+    "drizzle-orm": "0.45.2",
     "next": "16.2.10",
     "react": "19.2.7",
     "react-dom": "19.2.7"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.12.1",
     "@cloudflare/vite-plugin": "1.45.1",
     "@eslint-react/eslint-plugin": "5.17.1",
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.61.1",
     "@testing-library/react": "16.3.0",
     "@testing-library/user-event": "14.6.1",
     "@types/node": "22.19.19",
@@ -29,6 +36,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.3",
     "@vitejs/plugin-rsc": "0.5.28",
+    "drizzle-kit": "0.31.10",
     "eslint": "10.7.0",
     "globals": "16.5.0",
     "jsdom": "27.0.1",
@@ -41,6 +49,9 @@
     "wrangler": "4.112.0"
   },
   "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    },
     "postcss": "8.5.19"
   },
   "type": "module"

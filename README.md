@@ -1,24 +1,24 @@
 # AI Practice Lab
 
-Current release: Version 2.0.2, updated July 18, 2026.
+Current release: Version 2.1.0, updated July 18, 2026.
 
 AI Practice Lab is an interactive, self-paced course for people who want to use
 AI confidently at work. Three training levels use short lessons, realistic
 exercises, and practical capstones to turn AI guidance into repeatable habits.
 
-The course runs entirely in the browser. It does not call an AI service, require
-an API key, or send learner responses to a backend. Onboarding role families
-reflect defense-contractor engineering, cyber, test, program, mission-support, space,
-business development, capture, proposal, solutions, contracts, legal,
-compliance, finance, talent, communications, and business-operations functions.
+The course remains private and local-only by default. It does not call an AI
+model, require an API key, or upload exercise responses. Learners may separately
+opt into account-based progress sync, anonymous usage counters, and aggregate
+cohort sharing. Onboarding role families reflect defense-contractor
+engineering, cyber, test, program, mission-support, space, business development,
+capture, proposal, solutions, contracts, legal, compliance, finance, talent,
+communications, and business-operations functions.
 
 Repository: [AzJester/AI-TRAINING](https://github.com/AzJester/AI-TRAINING)
 
 ## Public access
 
-The clean public address is [ai-training.st-dba.com](https://ai-training.st-dba.com).
-The address begins serving the site after its DNS verification records are
-added and the hosting certificate becomes active.
+The public address is [ai-training.st-dba.com](https://ai-training.st-dba.com).
 
 ## What learners can do
 
@@ -33,8 +33,14 @@ added and the hosting certificate becomes active.
 - Follow a safe-data decision coach before entering workplace information.
 - Complete an adaptive knowledge check that returns missed concepts for review.
 - Track progress independently for each level and resume in the browser.
-- Review local instructor analytics, export progress, and download a personal
+- Optionally sync minimized progress across signed-in devices while retaining
+  device-only mode.
+- Join an instructor cohort with explicit consent; reports contain only
+  privacy-thresholded, coarsely rounded aggregate completion statistics.
+- Export personal progress, aggregate cohort CSV reports, and a personal
   completion certificate.
+- Install the site as a PWA and continue training after the application shell
+  has been cached for offline use.
 - Reset every saved activity and bookmark to 0 at any time.
 - Use the lab comfortably on desktop, tablet, or mobile.
 
@@ -151,8 +157,17 @@ npm test
 ```
 
 `npm test` creates a production build, checks its server-rendered HTML, and runs
-the three-level component contract tests. To build or run the production output
-separately:
+the unit and component suites. The browser suite covers all five lesson practice
+types, the capstone, downloads, responsive breakpoints, keyboard-only use,
+offline recovery, and automated Axe checks:
+
+```powershell
+npx playwright install chromium
+npm run test:e2e
+npm run test:accessibility
+```
+
+To build or run the production output separately:
 
 ```powershell
 npm run build
@@ -163,24 +178,40 @@ npm run start
 
 AI Practice Lab is deliberately local-first. Course content and exercise logic
 ship with the application, while learner progress is stored in the current
-browser. Clearing browser storage or switching browsers starts a fresh course.
+browser. Clearing browser storage or switching browsers starts a fresh course
+unless the learner explicitly enables account sync.
 
 Each level introduces one idea at a time, then asks the learner to apply it
 before moving on. Every level covers clarifying the job, limiting risk,
 engineering context, assessing output, and refining the work while keeping
 human ownership. A level-specific capstone combines those skills in a realistic
 scenario. A printable completion summary provides a lightweight record of the
-learner's work. The instructor view is a snapshot of this browser only. It is
-not team analytics, personnel evaluation, or an externally verified credential.
+learner's work. Cohort reporting is completion-oriented, aggregate-only, and
+unavailable until at least five members have both opted into sharing and synced
+progress. Published values are rounded into coarse privacy bands so successive
+reports do not expose exact small-group averages. It is not personnel evaluation
+or an externally verified credential.
+
+## Content management
+
+Lessons, quizzes, capstones, course metadata, and downloadable resources live
+under `content/` as validated JSON. Authors can update ordinary curriculum copy
+without editing TypeScript. Keep published identifiers stable because local and
+synced learner progress references them. See [`content/README.md`](content/README.md)
+for the schema, supported practice types, and editing workflow.
 
 ## Project structure
 
 ```text
-app/                 Application routes, course UI, and styles
+app/                 Application shell and independently maintained features
+content/             Validated JSON lessons, quizzes, capstones, and resources
+db/                  Drizzle schema for optional hosted features
+drizzle/             Versioned D1 migrations
 public/              Static assets
-tests/               Rendered HTML smoke tests
-worker/              Cloudflare Worker entry point
-.openai/hosting.json Optional OpenAI Sites hosting bindings
+tests/               Rendered HTML and Playwright browser tests
+worker/              Worker entry point and privacy-preserving APIs
+.github/workflows/   Quality, Lighthouse, link, and freshness automation
+.openai/hosting.json OpenAI Sites hosting bindings
 ```
 
 The application uses React, Next.js-compatible routing through
@@ -197,14 +228,39 @@ Cloudflare Vite plugin.
 | `npm run lint` | Check the project with ESLint |
 | `npm test` | Build and run all rendered HTML and component tests |
 | `npm run test:component` | Run the focused level and course contract tests |
+| `npm run test:e2e` | Run Playwright practice, capstone, download, responsive, keyboard, and PWA tests |
+| `npm run test:accessibility` | Run Axe checks in Playwright |
+| `npm run db:generate` | Generate a migration after an intentional D1 schema change |
 
-## Privacy and reset behavior
+## Privacy, sync, and reset behavior
 
-Learner input stays in the browser. This version has no analytics, account
-system, remote AI requests, or organization-wide tracking. Use the visible
-**Reset to 0** control or open **Progress**, then **Reset all progress to 0**,
-to clear lessons, quizzes, Creator Studio activity, and bookmarks while keeping
-the selected learner profile.
+- **Local-only is the default.** A fresh browser makes no progress-sync or
+  analytics requests. Exercise answers, capstone drafts, prompt text, generated
+  Skill content, and onboarding task descriptions are never synced.
+- **Account sync is optional.** After explicit sign-in and opt-in, the service
+  stores only bounded completion state, best quiz scores, bookmarks, course
+  position, role category, and confidence. Account email is normalized and
+  converted to a keyed one-way identifier before database access; it is not
+  stored in application tables.
+- **Analytics is a separate opt-in.** Only allowlisted daily counters are kept
+  for onboarding completion, lesson starts and incomplete exits, quiz retries,
+  and Studio activity. Counters older than 13 months are purged during routine
+  page, API, and scheduled worker maintenance. No raw event, session identifier,
+  prompt content, or account/cohort join is stored.
+- **Cohort sharing is a third explicit choice.** Instructors receive no roster or
+  learner-level rows. Completion metrics and CSV exports remain suppressed below
+  five synced members, use coarse privacy rounding, and stop including a learner
+  immediately after they leave.
+- **Deletion preserves user control.** Stopping sync leaves the cloud copy in
+  place; deleting the cloud copy also removes owned cohorts and memberships while
+  retaining progress on the current device. A deletion tombstone prevents another
+  device from automatically recreating the cloud copy; uploading again requires
+  a new explicit sync choice. Reset increments a sync epoch so an older device
+  cannot restore cleared achievements.
+
+Use **Reset to 0** or open **Progress**, then **Reset all progress to 0**, to
+clear lessons, quizzes, Creator Studio activity, and bookmarks while keeping the
+selected learner profile.
 
 ## Attribution
 
@@ -213,5 +269,7 @@ Created by Dr Shane Turner. © 2026 Dr Shane Turner. All rights reserved.
 ## Accessibility
 
 The interface is designed for keyboard navigation, clear focus states,
-responsive layouts, reduced-motion preferences, and readable contrast. Please
-include keyboard and mobile-width checks when reviewing UI changes.
+responsive layouts, reduced-motion preferences, and readable contrast. CI runs
+Axe browser checks and Lighthouse accessibility budgets on each change. A
+scheduled workflow also checks external links and fails when dated model
+guidance has not been re-verified within its freshness window.

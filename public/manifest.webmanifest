@@ -1,0 +1,28 @@
+{
+  "id": "/",
+  "name": "AI Practice Lab",
+  "short_name": "AI Practice",
+  "description": "Practical, responsible AI training for mission and business teams.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f3f7",
+  "theme_color": "#442c81",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "prefer_related_applications": false
+}

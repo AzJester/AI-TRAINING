@@ -1,0 +1,80 @@
+{
+  "id": "advanced-capstone",
+  "levelId": "advanced",
+  "number": 6,
+  "title": "Capstone: Govern an AI decision-support service",
+  "minutes": 15,
+  "description": "Use CLEAR to make an evidence-based stage-gate decision for a cross-functional AI service.",
+  "outcome": "You can recommend whether to stop, remediate, pilot, or scale a system using operating-model, governance, evaluation, human-control, and lifecycle evidence.",
+  "scenario": "An AI governance council must decide whether a fictional evidence-brief assistant should move from a synthetic pilot to limited production. The future service could support engineering, program, proposal, solutions, Contracts, compliance, and mission-support teams by organizing approved sources. It may not make technical, legal, contractual, security, compliance, or mission decisions. This exercise uses synthetic evidence and does not provide legal advice.",
+  "sourcePack": [
+    "P1 pilot scope: 60 synthetic cases using public and approved reusable content; no CUI, classified, export-controlled, personal, or customer-sensitive material.",
+    "P2 task results: 94 percent consequential-claim recall and 98 percent exact-quote fidelity across the full set.",
+    "P3 critical test: One adversarial document caused an unsupported claim to enter the draft after an embedded instruction attempted to override source rules.",
+    "P4 remediation status: A proposed fix exists, but independent regression and adversarial retesting are not complete.",
+    "P5 human-control test: Under time pressure, two of six qualified reviewers approved a seeded unsupported claim. Average review time fell from 22 to 14 minutes.",
+    "P6 approved boundary: The system may draft an internal evidence brief only. External release and functional decisions require separate authorized human approval.",
+    "P7 operations gap: Incident response, rollback, reviewer-load thresholds, and user recourse are not fully designed.",
+    "P8 change notice: A new model version is scheduled before the proposed production date and has not been evaluated in this workflow."
+  ],
+  "stages": [
+    {
+      "step": "clarify",
+      "title": "Frame the stage-gate decision",
+      "prompt": "Define the bounded service, users, work decisions, owners, expected value, and consequences of failure.",
+      "deliverable": "An operating-model statement and a clear stop, remediate, pilot, or scale decision question."
+    },
+    {
+      "step": "limit",
+      "title": "Define enforceable boundaries",
+      "prompt": "Set the allowed data, actions, users, environments, authorities, release gates, and escalation paths.",
+      "deliverable": "A risk tier and control matrix that preserves all functional authorities."
+    },
+    {
+      "step": "engineer",
+      "title": "Evaluate and challenge",
+      "prompt": "Assess normal, edge, adversarial, regression, and control evidence. Define critical failures and retest requirements.",
+      "deliverable": "A versioned evaluation plan with thresholds and failure disposition."
+    },
+    {
+      "step": "assess",
+      "title": "Test human control",
+      "prompt": "Evaluate whether reviewers can detect, reject, escalate, stop, and correct errors under realistic workload and time pressure.",
+      "deliverable": "A human-control assurance plan with evidence, workload, recourse, and stop tests."
+    },
+    {
+      "step": "refine",
+      "title": "Decide the lifecycle path",
+      "prompt": "Recommend the next stage, evidence needed, owners, monitoring, incident response, change control, rollback, and retirement criteria.",
+      "deliverable": "A council-ready recommendation with conditions and accountable owners."
+    }
+  ],
+  "rubric": [
+    {
+      "id": "system-framing",
+      "label": "System framing",
+      "description": "The recommendation governs a complete use case and workflow, not only a model score."
+    },
+    {
+      "id": "critical-risk",
+      "label": "Critical-risk discipline",
+      "description": "The adversarial failure and human-control weakness are not hidden by average metrics."
+    },
+    {
+      "id": "enforceable-controls",
+      "label": "Enforceable controls",
+      "description": "Data, authority, release, stop, escalation, and evidence requirements are operational."
+    },
+    {
+      "id": "stage-evidence",
+      "label": "Stage evidence",
+      "description": "Advancement depends on versioned retesting, control assurance, and authorized acceptance."
+    },
+    {
+      "id": "lifecycle",
+      "label": "Lifecycle ready",
+      "description": "Monitoring, incidents, change, rollback, recourse, and retirement have owners and criteria."
+    }
+  ],
+  "modelResponse": "Do not advance to limited production yet. The pilot shows promising task performance and lower review time (P2, P5), but a critical adversarial source-control failure is not independently retested (P3, P4), two qualified reviewers missed a seeded unsupported claim under pressure (P5), and core operational controls remain incomplete (P7). The scheduled model change also means current evidence will not describe the proposed production configuration (P8). Keep discovery limited to the approved public, synthetic, and reusable-content boundary (P1). Before a new stage-gate review, independently regression-test the fix and new model, require zero critical source-rule or release-gate bypasses, redesign the reviewer interface and workload, retest human rejection and stop behavior, and complete incident, rollback, recourse, monitoring, and change-control plans. Preserve the internal-draft-only boundary and separate authorized approval for every functional decision and external release (P6). The council, system owner, functional authorities, Security, Contracts, Legal and Compliance, Privacy, Export, and affected program owners should approve only within their designated responsibilities."
+}

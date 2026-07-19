@@ -1,0 +1,58 @@
+name: Content freshness
+
+on:
+  schedule:
+    - cron: "23 15 * * 1"
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "README.md"
+      - "app/**/*.ts"
+      - "app/**/*.tsx"
+      - "content/**/*.json"
+      - ".github/workflows/content-freshness.yml"
+      - ".github/workflows/check-model-guidance.mjs"
+  pull_request:
+    paths:
+      - "README.md"
+      - "app/**/*.ts"
+      - "app/**/*.tsx"
+      - "content/**/*.json"
+      - ".github/workflows/content-freshness.yml"
+      - ".github/workflows/check-model-guidance.mjs"
+
+permissions:
+  contents: read
+
+jobs:
+  links-and-models:
+    name: External links and model-review age
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.1
+      - name: Fail when model guidance is stale
+        run: node .github/workflows/check-model-guidance.mjs
+      - name: Check external links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --verbose
+            --no-progress
+            --max-retries 3
+            --retry-wait-time 2
+            --accept 200..=299,429
+            --exclude '^https://$'
+            --exclude '^http://127\.0\.0\.1'
+            --exclude '^http://localhost'
+            './README.md'
+            './app/**/*.ts'
+            './app/**/*.tsx'
+            './content/**/*.json'
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

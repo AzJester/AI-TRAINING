@@ -1,0 +1,1 @@
+ALTER TABLE `sync_deletions` ADD `sync_enabled` integer DEFAULT false NOT NULL;

@@ -1,0 +1,79 @@
+{
+  "id": "intermediate-capstone",
+  "levelId": "intermediate",
+  "number": 6,
+  "title": "Capstone: Build a controlled cross-functional decision brief",
+  "minutes": 15,
+  "description": "Apply CLEAR to decompose a time-sensitive request, control the source set, reconcile cross-functional evidence, and create an accountable handoff.",
+  "outcome": "You can design a reviewable workflow and a bounded leadership recommendation without replacing functional authority.",
+  "scenario": "A fictional customer asks a program team to explore moving a field demonstration two weeks earlier. Leadership needs a planning brief by Friday. The request touches engineering, program schedule, solutions, Contracts, compliance, and mission support. All source material in this exercise is synthetic and sanitized. The brief may compare options but may not approve a technical disposition, interpret a contract, or commit the organization.",
+  "sourcePack": [
+    "R1 customer discussion note: Explore whether the November 20 demonstration could move to November 6. The note is a planning request, not an executed direction.",
+    "R2 approved program schedule: Current integration completes November 12; the baseline demonstration is November 20.",
+    "R3 engineering status: Technical feasibility of acceleration has not been assessed. No engineering disposition is approved.",
+    "R4 Contracts status: No executed change modifies the current baseline or delivery obligations.",
+    "R5 approved reusable solution concept: A phased demonstration could separate the core scenario from optional features, subject to technical and customer approval.",
+    "R6 compliance note: Use only this sanitized source pack. Route contractual, legal, export, security, and technical determinations to their authorized owners.",
+    "R7 mission-support note: Required site staff are confirmed for November 20 but availability for November 6 is unresolved."
+  ],
+  "stages": [
+    {
+      "step": "clarify",
+      "title": "Decompose the leadership need",
+      "prompt": "Define the decision brief, then split the work into fact extraction, gap analysis, option comparison, and accountable recommendation tasks.",
+      "deliverable": "A task map with input, output, acceptance check, and owner for each step."
+    },
+    {
+      "step": "limit",
+      "title": "Set the source and authority boundaries",
+      "prompt": "State which synthetic sources may be used, what the workflow must not infer, and which decisions remain with functional authorities.",
+      "deliverable": "An approved-input register plus technical, contractual, compliance, and commitment boundaries."
+    },
+    {
+      "step": "engineer",
+      "title": "Design the evidence workflow",
+      "prompt": "Create a sequence that produces a source register, fact table, gap and conflict log, option matrix, and draft brief with human gates.",
+      "deliverable": "A structured workflow with source IDs, schemas, stop conditions, and review gates."
+    },
+    {
+      "step": "assess",
+      "title": "Reconcile the evidence",
+      "prompt": "Check every consequential claim against the source pack and identify where leadership needs a functional disposition rather than an AI conclusion.",
+      "deliverable": "A claim-to-source matrix and an owner-routed question list."
+    },
+    {
+      "step": "refine",
+      "title": "Package the handoff",
+      "prompt": "Prepare a concise recommendation, limitations, next actions, owners, approvals, and a reusable AI-assistance note.",
+      "deliverable": "A decision brief that another qualified teammate can review and reproduce."
+    }
+  ],
+  "rubric": [
+    {
+      "id": "decomposed",
+      "label": "Decomposed",
+      "description": "The request is split into bounded tasks with visible dependencies and acceptance checks."
+    },
+    {
+      "id": "authorized",
+      "label": "Authorized",
+      "description": "Only the synthetic source pack is used, and technical, contractual, compliance, and commitment authority stays with designated people."
+    },
+    {
+      "id": "traceable",
+      "label": "Traceable",
+      "description": "Every material claim maps to a source ID or an explicitly labeled gap."
+    },
+    {
+      "id": "decision-ready",
+      "label": "Decision-ready",
+      "description": "The brief presents realistic options, prerequisites, owners, and a reversible next step."
+    },
+    {
+      "id": "reusable",
+      "label": "Reusable",
+      "description": "The handoff includes source rules, schemas, checks, owners, versioning, and stop conditions."
+    }
+  ],
+  "modelResponse": "Recommend a bounded feasibility sprint rather than committing to November 6. The current approved baseline remains November 20 (R2, R4). November 6 is a planning request, not executed direction (R1), and it precedes the current integration-complete date (R2). Engineering has not assessed feasibility (R3), and site staffing is unresolved (R7). The phased concept in R5 is an option for authorized technical and customer review, not an approved solution. By Wednesday, Engineering should assess the minimum demonstrable configuration, Mission Support should confirm site resources, Program should model schedule impacts, and Contracts and Compliance should confirm the authorized response path. Leadership can then decide whether to propose a phased alternative or retain the baseline. AI assistance note: AI organized only the supplied synthetic sources, preserved source IDs, and drafted the option structure. Functional owners must validate all facts and retain their existing decision authority."
+}

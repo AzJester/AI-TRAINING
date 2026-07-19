@@ -1,0 +1,234 @@
+/* Onboarding */
+
+.dialog-backdrop {
+  position: fixed;
+  z-index: 100;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: auto;
+  background: rgba(16, 42, 46, 0.72);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+
+.onboarding-dialog {
+  display: grid;
+  width: min(920px, 100%);
+  max-height: calc(100vh - 48px);
+  grid-template-columns: 280px minmax(0, 1fr);
+  overflow: auto;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.28);
+}
+
+.onboarding-aside {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: var(--ink);
+  color: #fff;
+  padding: 32px;
+}
+
+.onboarding-aside::after {
+  position: absolute;
+  top: -80px;
+  right: -90px;
+  width: 230px;
+  height: 230px;
+  border: 1px solid rgba(41, 170, 225, 0.42);
+  border-radius: 50%;
+  content: "";
+}
+
+.onboarding-aside .brand-mark {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  background: var(--lime);
+  color: var(--ink);
+}
+
+.onboarding-aside p {
+  margin-bottom: 5px;
+  color: var(--lime);
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.onboarding-aside strong {
+  color: #d5e0df;
+  font-size: 1rem;
+}
+
+.onboarding-main {
+  padding: 38px 42px;
+}
+
+.onboarding-main > h2 {
+  margin-bottom: 10px;
+  font-size: 2rem;
+}
+
+.onboarding-main > p:not(.eyebrow) {
+  color: var(--muted);
+}
+
+.form-field,
+.confidence-field,
+.task-field,
+.onboarding-level-field {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.form-field > span,
+.confidence-field legend,
+.task-field legend,
+.onboarding-level-field legend {
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.confidence-field,
+.task-field,
+.onboarding-level-field {
+  border: 0;
+  padding: 0;
+}
+
+.confidence-field > div {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+}
+
+.confidence-field label,
+.task-field label {
+  position: relative;
+}
+
+.confidence-field input,
+.task-field input {
+  position: absolute;
+  opacity: 0;
+}
+
+.confidence-field label span {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  font-weight: 750;
+}
+
+.confidence-field input:checked + span,
+.confidence-field input:focus-visible + span,
+.task-field input:checked + span,
+.task-field input:focus-visible + span {
+  border-color: var(--cobalt);
+  background: var(--cobalt-soft);
+  color: var(--cobalt-dark);
+}
+
+.confidence-field > small {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.task-field > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.task-field label span {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 99px;
+  padding: 7px 11px;
+  font-size: 0.76rem;
+}
+
+.onboarding-level-field > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.onboarding-level-field label {
+  position: relative;
+  min-width: 0;
+}
+
+.onboarding-level-field input {
+  position: absolute;
+  opacity: 0;
+}
+
+.onboarding-level-field label > span {
+  position: relative;
+  display: grid;
+  min-height: 126px;
+  align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface-soft);
+  padding: 12px;
+}
+
+.onboarding-level-field b {
+  margin-bottom: 8px;
+  color: var(--cobalt);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 0.7rem;
+}
+
+.onboarding-level-field strong,
+.onboarding-level-field small {
+  display: block;
+}
+
+.onboarding-level-field small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.67rem;
+  line-height: 1.35;
+}
+
+.onboarding-level-field em {
+  align-self: end;
+  width: fit-content;
+  margin-top: 9px;
+  border-radius: 99px;
+  background: var(--lime-soft);
+  color: var(--cobalt-dark);
+  padding: 3px 7px;
+  font-size: 0.59rem;
+  font-style: normal;
+  font-weight: 800;
+}
+
+.onboarding-level-field input:checked + span,
+.onboarding-level-field input:focus-visible + span {
+  border-color: var(--cobalt);
+  background: var(--cobalt-soft);
+  box-shadow: inset 0 0 0 1px var(--cobalt);
+}
+
+.onboarding-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+}

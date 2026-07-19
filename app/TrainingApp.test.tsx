@@ -27,12 +27,40 @@ const EXPECTED_LEVELS = [
 ] as const;
 
 const TRAINING_APP_SOURCE = new URL("./TrainingApp.tsx", import.meta.url);
+const ONBOARDING_SOURCE = new URL(
+  "./training/onboarding.tsx",
+  import.meta.url,
+);
+const PROGRESS_PAGE_SOURCE = new URL(
+  "./training/progress-page.tsx",
+  import.meta.url,
+);
 const GLOBALS_CSS_SOURCE = new URL("./globals.css", import.meta.url);
 const USER_FACING_SOURCE_FILES = [
   TRAINING_APP_SOURCE,
+  ONBOARDING_SOURCE,
+  PROGRESS_PAGE_SOURCE,
+  new URL("./training/dashboard.tsx", import.meta.url),
+  new URL("./training/lesson-player.tsx", import.meta.url),
+  new URL("./training/practice-exercises.tsx", import.meta.url),
+  new URL("./training/quiz-panel.tsx", import.meta.url),
+  new URL("./training/completion-panel.tsx", import.meta.url),
+  new URL("./training/capstone-player.tsx", import.meta.url),
+  new URL("./training/practice-library.tsx", import.meta.url),
+  new URL("./training/resources-page.tsx", import.meta.url),
   new URL("./training-data.ts", import.meta.url),
   new URL("./layout.tsx", import.meta.url),
   GLOBALS_CSS_SOURCE,
+  new URL("./training/styles/dashboard.css", import.meta.url),
+  new URL("./training/styles/standard-pages.css", import.meta.url),
+  new URL("./training/styles/practice.css", import.meta.url),
+  new URL("./training/styles/lesson.css", import.meta.url),
+  new URL("./training/styles/practice-exercises.css", import.meta.url),
+  new URL("./training/styles/quiz-and-completion.css", import.meta.url),
+  new URL("./training/styles/capstone.css", import.meta.url),
+  new URL("./training/styles/progress.css", import.meta.url),
+  new URL("./training/styles/resources.css", import.meta.url),
+  new URL("./training/styles/onboarding.css", import.meta.url),
   new URL("../README.md", import.meta.url),
 ];
 
@@ -77,7 +105,7 @@ describe("AI Practice Lab training levels", () => {
     const html = renderToStaticMarkup(<TrainingApp />);
 
     expect(html).toContain("Created by Dr Shane Turner");
-    expect(html).toContain("Version 2.0.2");
+    expect(html).toContain("Version 2.1.0");
     expect(html).toContain("Updated July 18, 2026");
     expect(html).toContain("© 2026 Dr Shane Turner. All rights reserved.");
   });
@@ -94,20 +122,21 @@ describe("AI Practice Lab training levels", () => {
   });
 
   it("keeps the page inert and moves focus into the onboarding dialog", async () => {
-    const source = await readFile(TRAINING_APP_SOURCE, "utf8");
+    const appSource = await readFile(TRAINING_APP_SOURCE, "utf8");
+    const onboardingSource = await readFile(ONBOARDING_SOURCE, "utf8");
 
-    expect(source).toMatch(
+    expect(appSource).toMatch(
       /className="app-shell"\s+inert=\{hydrated && !progress\.profile \? true : undefined\}/,
     );
-    expect(source).toMatch(
+    expect(onboardingSource).toMatch(
       /className="onboarding-dialog"\s+role="dialog"\s+aria-modal="true"/,
     );
-    expect(source).toMatch(/roleSelectRef\.current\?\.focus\(\)/);
-    expect(source).toMatch(/<select\s+ref=\{roleSelectRef\}/);
+    expect(onboardingSource).toMatch(/roleSelectRef\.current\?\.focus\(\)/);
+    expect(onboardingSource).toMatch(/<select\s+ref=\{roleSelectRef\}/);
   });
 
   it("preserves prior Skills progress while moving into the expanded pathway", async () => {
-    const source = await readFile(TRAINING_APP_SOURCE, "utf8");
+    const source = await readFile(PROGRESS_PAGE_SOURCE, "utf8");
     const progressSource = await readFile(
       new URL("./training-progress.ts", import.meta.url),
       "utf8",

@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1784427340771,
+      "tag": "0000_tiny_mandrill",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784429788878,
+      "tag": "0001_clever_goblin_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784429934469,
+      "tag": "0002_petite_jubilee",
+      "breakpoints": true
+    }
+  ]
+}

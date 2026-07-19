@@ -1,0 +1,166 @@
+[
+  {
+    "id": "clear-prompt-canvas",
+    "kind": "template",
+    "title": "CLEAR prompt canvas",
+    "description": "A copy-ready structure for turning a work request into a grounded, reviewable AI prompt.",
+    "useWhen": "Use before any task where the answer needs to fit a specific audience, source set, or decision.",
+    "sections": [
+      {
+        "heading": "Clarify",
+        "items": [
+          "Audience and intended outcome",
+          "Deliverable and finish line",
+          "Success criteria"
+        ]
+      },
+      {
+        "heading": "Limit",
+        "items": [
+          "Approved tool and purpose",
+          "Minimum necessary data",
+          "Human-only decisions and escalation points"
+        ]
+      },
+      {
+        "heading": "Engineer",
+        "items": [
+          "Role and task",
+          "Labeled source material",
+          "Constraints and output format",
+          "Instructions for uncertainty"
+        ]
+      },
+      {
+        "heading": "Assess and refine",
+        "items": [
+          "Claims to verify",
+          "Limitations and missing voices",
+          "Final owner, edits, and disclosure"
+        ]
+      }
+    ],
+    "copyText": "CLEAR PROMPT CANVAS\n\nCLARIFY\nAudience:\nOutcome:\nDeliverable:\nSuccess criteria:\n\nLIMIT\nApproved tool/purpose:\nData I will exclude or minimize:\nDecision that stays with a human:\n\nENGINEER\nRole:\nTask:\nSource material:\nConstraints:\nOutput format:\nIf information is missing:\n\nASSESS\nClaims to verify:\nImportant omissions, assumptions, or audience risks:\n\nREFINE\nHuman edits:\nFinal owner/approver:\nAI-assistance note, if required:"
+  },
+  {
+    "id": "safe-input-check",
+    "kind": "checklist",
+    "title": "60-second safe-input check",
+    "description": "A fast pause point before data or documents enter an AI workflow.",
+    "useWhen": "Use immediately before pasting, uploading, connecting, or retrieving information with AI.",
+    "sections": [
+      {
+        "heading": "Tool and purpose",
+        "items": [
+          "Is this AI tool approved for this work purpose?",
+          "Does policy allow this information classification in the tool?",
+          "Am I authorized to use the information this way?"
+        ]
+      },
+      {
+        "heading": "Minimum data",
+        "items": [
+          "Can I remove names, identifiers, secrets, or confidential details?",
+          "Can I aggregate, generalize, or use a synthetic example?",
+          "Could rare details re-identify a person?"
+        ]
+      },
+      {
+        "heading": "Boundaries",
+        "items": [
+          "Could untrusted content try to change my instructions?",
+          "Does this touch employment, legal, safety, access, finance, or another high-impact decision?",
+          "Who should I ask when the classification or use is unclear?"
+        ]
+      }
+    ],
+    "copyText": "SAFE-INPUT CHECK\n□ Approved tool for this purpose\n□ Allowed data classification\n□ Authorized use\n□ Minimum necessary data only\n□ Direct and indirect identifiers removed where possible\n□ No credentials, tokens, or secrets\n□ Untrusted instructions will not override policy\n□ High-impact uses escalated to the right owner\n\nIf any answer is unclear: pause before sharing."
+  },
+  {
+    "id": "output-review",
+    "kind": "checklist",
+    "title": "AI output review",
+    "description": "A risk-based check for facts, reasoning, omissions, audience fit, and ownership.",
+    "useWhen": "Use before an AI-assisted result informs a decision or reaches another person.",
+    "sections": [
+      {
+        "heading": "Evidence",
+        "items": [
+          "Trace important claims to trustworthy sources.",
+          "Open and inspect citations; do not rely on their presence.",
+          "Label estimates, assumptions, and unknowns."
+        ]
+      },
+      {
+        "heading": "Quality",
+        "items": [
+          "Check calculations, dates, names, and quoted language.",
+          "Look for missing limitations, counterexamples, and affected perspectives.",
+          "Confirm tone, accessibility, and fit for the intended audience."
+        ]
+      },
+      {
+        "heading": "Accountability",
+        "items": [
+          "Increase review for sensitive, irreversible, or high-impact use.",
+          "Obtain required expert or policy approval.",
+          "Name the human who owns the final result."
+        ]
+      }
+    ],
+    "copyText": "AI OUTPUT REVIEW\n□ Important claims traced to appropriate sources\n□ Citations opened and checked\n□ Numbers, dates, names, and calculations verified\n□ Assumptions and uncertainty labeled\n□ Material limitations and omissions included\n□ Relevant affected perspectives considered\n□ Tone, accessibility, and audience fit checked\n□ Required policy/expert review completed\n□ Human owner accepts the final result"
+  },
+  {
+    "id": "ai-handoff-note",
+    "kind": "template",
+    "title": "AI-assisted work handoff",
+    "description": "A short note that helps a reviewer understand how an AI-assisted result was created and checked.",
+    "useWhen": "Use when policy, risk, auditability, or reviewer trust makes the workflow relevant.",
+    "sections": [
+      {
+        "heading": "What to record",
+        "items": [
+          "The part of the task AI assisted with",
+          "The sources used and the important verification completed",
+          "Known limitations or open questions",
+          "Material human edits and the final owner"
+        ]
+      }
+    ],
+    "copyText": "AI-ASSISTED WORK HANDOFF\nAI assisted with:\nSources used:\nChecks completed:\nKnown limitations/open questions:\nMaterial human edits:\nRequired reviewer/approver:\nFinal owner:"
+  },
+  {
+    "id": "team-experiment-plan",
+    "kind": "guide",
+    "title": "Safe AI experiment plan",
+    "description": "A lightweight guide for testing a promising workflow without treating an early result as proof.",
+    "useWhen": "Use after a low- or moderate-risk task shows value and the team is considering repeat use.",
+    "sections": [
+      {
+        "heading": "Frame the experiment",
+        "items": [
+          "Name the work problem and baseline.",
+          "Set a small, reversible scope and timebox.",
+          "Define who is included and who owns the experiment."
+        ]
+      },
+      {
+        "heading": "Measure the whole result",
+        "items": [
+          "Track time or throughput without ignoring quality.",
+          "Measure error, rework, accessibility, and user experience.",
+          "Record incidents, edge cases, and people affected."
+        ]
+      },
+      {
+        "heading": "Decide responsibly",
+        "items": [
+          "Predefine stop, adjust, and continue criteria.",
+          "Review results with the appropriate policy or subject expert.",
+          "Document what transfers and what does not transfer to a larger rollout."
+        ]
+      }
+    ],
+    "copyText": "SAFE AI EXPERIMENT\nProblem and current baseline:\nHypothesis:\nScope and timebox:\nApproved tool and data:\nHuman owner:\nQuality measures:\nEfficiency measures:\nPeople/accessibility measures:\nStop criteria:\nReview date and reviewers:\nDecision and evidence:"
+  }
+]

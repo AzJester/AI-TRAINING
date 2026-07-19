@@ -1,0 +1,823 @@
+[
+  {
+    "id": "advanced-clarify",
+    "clearStep": "clarify",
+    "levelId": "advanced",
+    "number": 1,
+    "title": "Frame AI as an operating model",
+    "minutes": 8,
+    "description": "Translate an AI ambition into a portfolio of governed use cases, roles, controls, measures, and lifecycle decisions.",
+    "outcome": "You can define an operating model that connects business value with mission, technical, contractual, and policy accountability.",
+    "skillName": "AI operating-model design",
+    "objectives": [
+      "Define a use-case lifecycle from intake through retirement.",
+      "Separate platform, data, workflow, functional, and decision ownership.",
+      "Tie value measures to quality, risk, workforce, and mission outcomes."
+    ],
+    "concepts": [
+      {
+        "title": "Start with a portfolio of decisions",
+        "body": "An enterprise AI strategy becomes actionable when it names specific work decisions, users, approved inputs, expected value, and consequences of failure."
+      },
+      {
+        "title": "Design authority, not only activity",
+        "body": "The operating model should show who proposes, classifies, approves, builds, evaluates, operates, monitors, and retires each use case. One person may hold several roles, but the responsibilities must remain visible."
+      },
+      {
+        "title": "Manage the full lifecycle",
+        "body": "A use case can become unsafe or ineffective when models, policies, contracts, threats, sources, or missions change. Intake, approval, monitoring, incident response, change review, and retirement belong in the original design."
+      }
+    ],
+    "practice": {
+      "id": "advanced-operating-model-lab",
+      "type": "rewrite-lab",
+      "eyebrow": "Operating-model canvas",
+      "title": "Turn an AI mandate into a governed portfolio decision",
+      "estimatedMinutes": 4,
+      "instructions": [
+        "Rewrite the broad mandate as a portfolio framing statement.",
+        "Define value, scope, owners, controls, and lifecycle measures.",
+        "Keep existing technical, contractual, security, legal, and mission authorities intact."
+      ],
+      "scenario": "Leaders want to explore AI across engineering, program management, proposals, solutions, contracts, legal and compliance support, and mission support. Initial discovery must use public, synthetic, or explicitly approved information.",
+      "starterPrompt": "Deploy an AI copilot across every program this quarter and use it wherever it saves time.",
+      "fields": [
+        {
+          "id": "portfolio",
+          "label": "Use-case portfolio",
+          "prompt": "What bounded use cases and decisions are in scope?",
+          "placeholder": "Prioritized discovery candidates with user, work decision, approved source class, and failure consequence"
+        },
+        {
+          "id": "roles",
+          "label": "Roles and authority",
+          "prompt": "Who owns the platform, workflow, functional facts, data, and final decisions?",
+          "placeholder": "Business owner, functional authority, security and compliance reviewers, operator, approver"
+        },
+        {
+          "id": "controls",
+          "label": "Controls and gates",
+          "prompt": "What evidence, testing, approval, and human-control gates apply by risk?",
+          "placeholder": "Risk tier, evaluation threshold, source traceability, human approval, stop mechanism"
+        },
+        {
+          "id": "measures",
+          "label": "Measures and lifecycle",
+          "prompt": "How will value, quality, risk, adoption, incidents, and change be managed?",
+          "placeholder": "Baseline, pilot measures, monitoring cadence, change triggers, retirement owner"
+        }
+      ],
+      "successChecks": [
+        "The mandate becomes a staged, prioritized portfolio rather than universal deployment.",
+        "Every use case has a work owner and decision owner.",
+        "Risk determines evaluation, approval, monitoring, and human-control strength.",
+        "The model does not replace authorized legal, contracts, technical, security, or mission judgment.",
+        "Scale depends on evidence from a bounded pilot."
+      ],
+      "modelAnswer": "Establish a governed AI use-case portfolio. Each candidate must name the work decision, users, approved source classes, expected value, failure consequence, accountable business and functional owners, and required policy reviewers. Begin with public, synthetic, or explicitly approved data in reversible pilots. Assign a risk tier that determines evaluation evidence, source traceability, human approval, monitoring, and stop controls. Measure quality, rework, cycle time, accessibility, workforce impact, and incidents against a baseline. Scale only after the designated authorities accept the evidence; review material changes and retire uses that no longer meet requirements."
+    },
+    "quiz": [
+      {
+        "id": "advanced-clarify-q1",
+        "prompt": "What is the best unit for governing an enterprise AI portfolio?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The model name by itself",
+            "feedback": "A model can support many uses with very different data, consequences, and controls."
+          },
+          {
+            "id": "b",
+            "text": "A specific use case with users, decision, data, value, risk, and accountable owners",
+            "feedback": "Correct. Governance becomes meaningful at the level of a real workflow and consequence."
+          },
+          {
+            "id": "c",
+            "text": "Any prompt that saves time",
+            "feedback": "Efficiency alone does not define authority, safety, or mission value."
+          }
+        ],
+        "correctOptionId": "b",
+        "explanation": "Use-case governance connects technology to a concrete decision, context, and accountability structure."
+      },
+      {
+        "id": "advanced-clarify-q2",
+        "prompt": "Which role must remain explicit even when AI performance is strong?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The accountable owner for the real-world decision",
+            "feedback": "Correct. Performance does not eliminate human authority and responsibility."
+          },
+          {
+            "id": "b",
+            "text": "A fictional model persona",
+            "feedback": "Prompt roles can shape output but do not provide organizational accountability."
+          },
+          {
+            "id": "c",
+            "text": "The person who wrote the longest prompt",
+            "feedback": "Prompt authorship is not the same as decision authority."
+          }
+        ],
+        "correctOptionId": "a",
+        "critical": true,
+        "explanation": "The operating model must preserve the designated owner who can accept, reject, stop, and answer for the outcome."
+      },
+      {
+        "id": "advanced-clarify-q3",
+        "prompt": "Why define retirement criteria during use-case intake?",
+        "options": [
+          {
+            "id": "a",
+            "text": "To assume the use case will fail",
+            "feedback": "Retirement planning is normal lifecycle control, not a prediction of failure."
+          },
+          {
+            "id": "b",
+            "text": "To avoid measuring value during operation",
+            "feedback": "Retirement decisions require ongoing evidence, not less measurement."
+          },
+          {
+            "id": "c",
+            "text": "To stop or replace the use when value, approval, controls, sources, or mission fit no longer hold",
+            "feedback": "Correct. A safe approval at launch does not last automatically through material change."
+          }
+        ],
+        "correctOptionId": "c",
+        "explanation": "Lifecycle governance includes an orderly path to suspend, revise, or retire a use case."
+      }
+    ],
+    "takeaway": "Govern AI as a portfolio of specific work decisions with owners, evidence, controls, monitoring, and retirement paths."
+  },
+  {
+    "id": "advanced-limit",
+    "clearStep": "limit",
+    "levelId": "advanced",
+    "number": 2,
+    "title": "Translate governance into enforceable boundaries",
+    "minutes": 9,
+    "description": "Turn policy, security, contractual, privacy, export, and mission constraints into workflow controls and escalation paths.",
+    "outcome": "You can define a risk tier and control set without inventing policy or giving legal advice.",
+    "skillName": "Governance boundary design",
+    "objectives": [
+      "Create a use-case risk tier from data, decision, user, reach, and failure consequence.",
+      "Translate policy requirements into technical and procedural controls.",
+      "Route interpretation and exceptions to designated authorities."
+    ],
+    "concepts": [
+      {
+        "title": "Policy becomes real at the control",
+        "body": "A principle such as human accountability needs an operational expression: a named approver, blocked release action, logged decision, escalation path, and tested stop mechanism."
+      },
+      {
+        "title": "Risk is multidimensional",
+        "body": "Consider information sensitivity, decision impact, user population, external reach, autonomy, reversibility, model capability, and the cost of error. A low-sensitivity input can still support a high-impact decision."
+      },
+      {
+        "title": "Exceptions need authority and evidence",
+        "body": "Do not convert ambiguity into a local exception. Document the issue and route it to authorized Security, Contracts, Legal, Compliance, Privacy, Export, technical, or mission owners. This course does not provide legal advice."
+      }
+    ],
+    "practice": {
+      "id": "advanced-governance-risk-sort",
+      "type": "risk-sort",
+      "eyebrow": "Governance triage",
+      "title": "Assign the control path, not just a risk label",
+      "estimatedMinutes": 4,
+      "instructions": [
+        "Classify each candidate for the stated discovery environment.",
+        "Use the feedback to identify required owners and safer alternatives.",
+        "Do not reinterpret markings or expand authorization."
+      ],
+      "scenario": "An AI governance council is screening fictional candidates for discovery. The available sandbox allows public and synthetic content only. Production approval is a separate decision.",
+      "categories": [
+        {
+          "id": "ready",
+          "label": "Ready for discovery",
+          "description": "A bounded, reversible experiment using public or synthetic content with a named owner."
+        },
+        {
+          "id": "pause",
+          "label": "Pause for governed review",
+          "description": "Potential value exists, but authority, controls, testing, or an appropriate environment must be established first."
+        },
+        {
+          "id": "restricted",
+          "label": "Outside this environment",
+          "description": "The data or action is prohibited in the public and synthetic discovery sandbox."
+        }
+      ],
+      "items": [
+        {
+          "id": "synthetic-compliance-matrix",
+          "text": "Synthetic proposal compliance-matrix evaluator",
+          "detail": "The team uses fictional requirements and labeled expected answers to test extraction quality.",
+          "answer": "ready",
+          "feedback": "Ready for bounded discovery. Define evaluation criteria and do not treat discovery approval as production approval."
+        },
+        {
+          "id": "cui-package",
+          "text": "CUI technical package in the discovery sandbox",
+          "detail": "A user proposes uploading the package after removing visible banners.",
+          "answer": "restricted",
+          "feedback": "Outside this environment. Removing a banner does not alter content, handling, contract, or authorization requirements."
+        },
+        {
+          "id": "contract-comparison",
+          "text": "Contract-clause comparison assistant",
+          "detail": "The concept uses approved documents but could influence interpretation and negotiation.",
+          "answer": "pause",
+          "feedback": "Pause for governed review. Define an approved environment, authorized Contracts and Legal roles, evidence traceability, and a block on autonomous interpretation or release."
+        },
+        {
+          "id": "autonomous-change",
+          "text": "Autonomous engineering-change approval",
+          "detail": "The model would approve a change and update the baseline without technical-authority review.",
+          "answer": "restricted",
+          "feedback": "Outside this use boundary. AI must not bypass designated engineering authority or configuration control."
+        },
+        {
+          "id": "mission-log-mining",
+          "text": "Operational mission-log pattern mining",
+          "detail": "Logs are de-identified, but sensitivity, aggregation, inference risk, and approved environment are unresolved.",
+          "answer": "pause",
+          "feedback": "Pause. De-identification does not resolve mission sensitivity or inference risk. Route the use to the designated mission, security, privacy, data, and program owners."
+        },
+        {
+          "id": "public-style-check",
+          "text": "Public website plain-language checker",
+          "detail": "The prototype uses already published pages and cannot publish changes.",
+          "answer": "ready",
+          "feedback": "Ready for discovery with a content owner and human review. External publication remains a separate controlled action."
+        }
+      ],
+      "debrief": "A useful governance decision states the allowed environment, source classes, users, actions, evidence, owners, release gates, monitoring, and stop conditions."
+    },
+    "quiz": [
+      {
+        "id": "advanced-limit-q1",
+        "prompt": "A low-sensitivity dataset supports a high-impact personnel decision. How should risk be assessed?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Low risk because the input is not sensitive",
+            "feedback": "Data sensitivity is only one dimension. Decision consequence can drive a high risk tier."
+          },
+          {
+            "id": "b",
+            "text": "Across data, decision impact, autonomy, affected people, reversibility, and failure consequence",
+            "feedback": "Correct. Governance must assess the complete use case."
+          },
+          {
+            "id": "c",
+            "text": "By the model vendor's marketing category",
+            "feedback": "Vendor descriptions cannot replace organization-specific use-case assessment."
+          }
+        ],
+        "correctOptionId": "b",
+        "critical": true,
+        "explanation": "Risk follows the full system and real-world use, not one attribute."
+      },
+      {
+        "id": "advanced-limit-q2",
+        "prompt": "Which control best operationalizes required human approval before external release?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A reminder in small text at the end of the prompt",
+            "feedback": "A reminder can help, but it does not enforce the release boundary."
+          },
+          {
+            "id": "b",
+            "text": "A system block that requires an authorized approver and records the approved version",
+            "feedback": "Correct. The control is enforceable, attributable, and tied to the released artifact."
+          },
+          {
+            "id": "c",
+            "text": "A model self-rating above 90 percent",
+            "feedback": "Self-ratings do not provide organizational authority or reliable assurance."
+          }
+        ],
+        "correctOptionId": "b",
+        "explanation": "Strong controls connect a policy requirement to a verifiable action and owner."
+      },
+      {
+        "id": "advanced-limit-q3",
+        "prompt": "A team finds a policy ambiguity during design. What should the governance process do?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Document the question and obtain a decision from the designated policy authority before proceeding",
+            "feedback": "Correct. The responsible authority interprets the rule and records the disposition."
+          },
+          {
+            "id": "b",
+            "text": "Let the model choose the least restrictive reading",
+            "feedback": "A model cannot authorize an exception or provide binding policy interpretation."
+          },
+          {
+            "id": "c",
+            "text": "Proceed quietly because the design is only a pilot",
+            "feedback": "Pilot status does not suspend governing requirements."
+          }
+        ],
+        "correctOptionId": "a",
+        "critical": true,
+        "explanation": "Governed escalation resolves ambiguity without expanding local authority."
+      }
+    ],
+    "takeaway": "Translate policy into allowed actions, enforced gates, evidence, owners, and escalation paths that match the full use-case risk."
+  },
+  {
+    "id": "advanced-engineer",
+    "clearStep": "engineer",
+    "levelId": "advanced",
+    "number": 3,
+    "title": "Engineer evaluations and red-team tests",
+    "minutes": 10,
+    "description": "Build a representative evaluation system that tests quality, safety, robustness, and control behavior before deployment.",
+    "outcome": "You can specify an evaluation set, failure taxonomy, adversarial tests, thresholds, and evidence package.",
+    "skillName": "Evaluation and red teaming",
+    "objectives": [
+      "Test against representative normal, edge, and adversarial cases.",
+      "Measure task quality and control compliance separately.",
+      "Predefine acceptance, escalation, and stop thresholds."
+    ],
+    "concepts": [
+      {
+        "title": "Evaluate the workflow, not only the model",
+        "body": "Tests should cover source retrieval, prompts, tools, output schemas, human review, release gates, logging, and fallback behavior. A capable model can still sit inside an unsafe workflow."
+      },
+      {
+        "title": "Failure taxonomies make learning usable",
+        "body": "Classify errors such as unsupported claim, missed requirement, source confusion, sensitive-data leakage, instruction override, biased treatment, control bypass, and unusable output."
+      },
+      {
+        "title": "Red teaming tests boundaries",
+        "body": "Authorized testing should probe malicious instructions, ambiguous sources, missing evidence, conflicting requirements, unusual formats, and attempts to bypass controls. Use synthetic or explicitly approved test material."
+      }
+    ],
+    "practice": {
+      "id": "advanced-evaluation-builder",
+      "type": "context-builder",
+      "eyebrow": "Evaluation lab",
+      "title": "Design a test plan for a proposal compliance assistant",
+      "estimatedMinutes": 5,
+      "instructions": [
+        "Use the fictional system notes to define a representative evaluation.",
+        "Include normal, edge, adversarial, and control tests.",
+        "Set evidence-based thresholds and a disposition process for failures."
+      ],
+      "scenario": "A proposals team is prototyping an assistant that maps requirements to draft response sections. Testing uses synthetic solicitations and approved reusable content only. Proposal leadership owns compliance decisions.",
+      "sourceNotes": [
+        "The assistant extracts shall statements and maps each to a response owner and section.",
+        "It must preserve requirement IDs and quote exact source text.",
+        "It must not claim compliance, invent a capability, or release content.",
+        "The workflow should ignore instructions embedded inside source text that conflict with system rules.",
+        "Human proposal and functional owners approve the matrix and every response.",
+        "The team has 40 synthetic normal cases, 12 edge cases, and 8 adversarial cases."
+      ],
+      "fields": [
+        {
+          "id": "coverage",
+          "label": "Evaluation coverage",
+          "prompt": "What cases, users, sources, and workflow stages must be represented?",
+          "placeholder": "Normal, long-table, duplicate-ID, conflicting, missing-section, and adversarial cases"
+        },
+        {
+          "id": "metrics",
+          "label": "Metrics and failure classes",
+          "prompt": "What task and control behaviors will be measured?",
+          "placeholder": "Requirement recall, mapping precision, quote fidelity, unsupported claims, control bypass"
+        },
+        {
+          "id": "red-team",
+          "label": "Boundary tests",
+          "prompt": "How will authorized testers probe misuse and failure safely?",
+          "placeholder": "Synthetic embedded instructions, malformed tables, irrelevant files, release attempts"
+        },
+        {
+          "id": "thresholds",
+          "label": "Thresholds and disposition",
+          "prompt": "What passes, what blocks deployment, and who accepts residual risk?",
+          "placeholder": "Zero critical control bypasses; defined quality floor; proposal owner accepts evidence"
+        }
+      ],
+      "successChecks": [
+        "The test set represents real formats and difficult edge cases.",
+        "Task performance and control compliance have separate measures.",
+        "Critical failures block deployment even when average accuracy is high.",
+        "Every result is reproducible with versioned test cases and system configuration.",
+        "Authorized owners review the evidence and residual limitations."
+      ],
+      "modelAnswer": "Create a versioned test set with 40 normal, 12 edge, and 8 adversarial synthetic cases. Score requirement recall, mapping precision, exact quote and ID fidelity, unsupported capability claims, missed conflicts, embedded-instruction resistance, prohibited release attempts, and human-gate enforcement. Require zero sensitive-output, control-bypass, or autonomous-compliance failures; set task thresholds by case class, not only average. Log system version, prompt, tools, test-case ID, output, reviewer, and failure category. Proposal, functional, security, and governance owners disposition critical failures and accept any residual limitations before a bounded pilot."
+    },
+    "quiz": [
+      {
+        "id": "advanced-engineer-q1",
+        "prompt": "A system averages 96 percent accuracy but bypasses the release gate in one adversarial case. What is the right disposition?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Pass because the average is high",
+            "feedback": "A critical control bypass should not disappear inside an average."
+          },
+          {
+            "id": "b",
+            "text": "Block deployment, investigate the failure, retest the fix, and obtain required approval",
+            "feedback": "Correct. Critical failure thresholds take precedence over aggregate performance."
+          },
+          {
+            "id": "c",
+            "text": "Delete the adversarial case",
+            "feedback": "Removing a revealing test hides risk instead of reducing it."
+          }
+        ],
+        "correctOptionId": "b",
+        "critical": true,
+        "explanation": "Acceptance criteria should identify failure classes that are unacceptable regardless of average score."
+      },
+      {
+        "id": "advanced-engineer-q2",
+        "prompt": "Why version the test set and complete system configuration?",
+        "options": [
+          {
+            "id": "a",
+            "text": "To make results reproducible and detect behavior changes after updates",
+            "feedback": "Correct. Evaluation evidence must be tied to the system that produced it."
+          },
+          {
+            "id": "b",
+            "text": "To guarantee future models behave identically",
+            "feedback": "Versioning reveals change; it does not guarantee identical behavior."
+          },
+          {
+            "id": "c",
+            "text": "To eliminate the need for reviewers",
+            "feedback": "Human review is needed to interpret failures and acceptance evidence."
+          }
+        ],
+        "correctOptionId": "a",
+        "explanation": "Reproducibility supports change control, comparison, audit, and regression testing."
+      },
+      {
+        "id": "advanced-engineer-q3",
+        "prompt": "What is a representative red-team test for a document workflow?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Only a short, perfectly formatted document",
+            "feedback": "A single ideal case does not test robustness or control behavior."
+          },
+          {
+            "id": "b",
+            "text": "A synthetic document with embedded instructions that attempt to override workflow rules",
+            "feedback": "Correct. This safely tests whether untrusted content can redirect the system."
+          },
+          {
+            "id": "c",
+            "text": "Live classified data copied into an unapproved test tool",
+            "feedback": "Never expand data authorization for testing. Use synthetic or explicitly approved material in the correct environment."
+          }
+        ],
+        "correctOptionId": "b",
+        "critical": true,
+        "explanation": "Red-team tests should challenge realistic boundaries while remaining authorized and safe."
+      }
+    ],
+    "takeaway": "Evaluate representative work, difficult edges, adversarial pressure, and control behavior with thresholds that make critical failures visible."
+  },
+  {
+    "id": "advanced-assess",
+    "clearStep": "assess",
+    "levelId": "advanced",
+    "number": 4,
+    "title": "Validate human control gates",
+    "minutes": 10,
+    "description": "Assess whether people have the information, authority, time, and mechanisms needed to control an AI-assisted decision.",
+    "outcome": "You can test human oversight as a real system control rather than a checkbox.",
+    "skillName": "Human-control assurance",
+    "objectives": [
+      "Distinguish nominal review from effective human control.",
+      "Verify evidence visibility, authority, workload, stop controls, and recourse.",
+      "Test the gate under time pressure, disagreement, and system failure."
+    ],
+    "concepts": [
+      {
+        "title": "A person in the loop is not enough",
+        "body": "Effective control requires a qualified person who sees relevant evidence and limitations, has time to review, can reject or stop the output, and is accountable for the decision."
+      },
+      {
+        "title": "Automation bias is a design risk",
+        "body": "High confidence displays, default acceptance, buried evidence, and excessive review volume can turn a human gate into routine approval."
+      },
+      {
+        "title": "Control includes recourse",
+        "body": "For decisions that affect people, access, safety, obligations, or mission outcomes, define how errors are challenged, investigated, corrected, and learned from."
+      }
+    ],
+    "practice": {
+      "id": "advanced-control-gate-check",
+      "type": "verification-check",
+      "eyebrow": "Control assurance",
+      "title": "Audit a proposed contract-risk routing gate",
+      "estimatedMinutes": 5,
+      "instructions": [
+        "Compare the proposed design with the fictional governance requirements.",
+        "Classify each design claim.",
+        "Use the improved draft as a control-ready alternative, not legal advice."
+      ],
+      "scenario": "A team proposes an AI assistant that flags clauses for authorized Contracts and Legal review. It may compare approved text and route issues, but it may not determine legal meaning, accept terms, or communicate externally.",
+      "sourcePack": [
+        "G1: Every external contract response requires an authorized human approver.",
+        "G2: The reviewer must see the source clause, model rationale, uncertainty, and applicable approved playbook reference.",
+        "G3: The system must block external release until approval is recorded against the exact version.",
+        "G4: The reviewer may reject, revise, escalate, or stop the workflow.",
+        "G5: High-severity flags must route to the designated Contracts or Legal owner; AI does not provide legal advice.",
+        "G6: Overrides, incidents, missed flags, reviewer load, and outcome quality are monitored."
+      ],
+      "draft": "Because the model scored 92 percent in testing, low-risk contract responses can be sent automatically. A general approval recorded once per week is sufficient. Reviewers only need the model's recommendation, and they should accept it unless they can prove it wrong.",
+      "claims": [
+        {
+          "id": "auto-send",
+          "text": "A 92 percent test score authorizes automatic external release.",
+          "answer": "unsupported",
+          "feedback": "G1 and G3 require approval of the exact version before external release. A score does not create authority."
+        },
+        {
+          "id": "weekly-approval",
+          "text": "One weekly general approval satisfies the release gate.",
+          "answer": "unsupported",
+          "feedback": "G3 requires approval tied to the exact version being released."
+        },
+        {
+          "id": "evidence-view",
+          "text": "Reviewers only need the model recommendation.",
+          "answer": "unsupported",
+          "feedback": "G2 requires source text, rationale, uncertainty, and an approved playbook reference."
+        },
+        {
+          "id": "reviewer-actions",
+          "text": "The authorized reviewer can reject, revise, escalate, or stop.",
+          "answer": "supported",
+          "feedback": "Supported by G4. The interface and process must make these actions practical."
+        },
+        {
+          "id": "high-severity",
+          "text": "High-severity issues route to designated Contracts or Legal owners.",
+          "answer": "supported",
+          "feedback": "Supported by G5. The system must not present its output as legal advice."
+        },
+        {
+          "id": "effective-control",
+          "text": "Adding an approval button guarantees effective human oversight.",
+          "answer": "needs-context",
+          "feedback": "A button is not enough. Qualification, evidence visibility, workload, authority, monitoring, and tested behavior determine effectiveness."
+        }
+      ],
+      "improvedDraft": "The assistant may compare approved text and route potential issues, but it cannot interpret terms, accept language, provide legal advice, or release an external response. The authorized reviewer sees the exact source clause, model rationale, uncertainty, and approved playbook reference. External release remains blocked until that reviewer approves the exact version. The reviewer can reject, revise, escalate, or stop. High-severity items route to designated Contracts or Legal owners. Testing and operations monitor missed flags, false flags, overrides, reviewer load, incidents, and outcome quality."
+    },
+    "quiz": [
+      {
+        "id": "advanced-assess-q1",
+        "prompt": "Which condition makes a human approval gate effective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "The reviewer is qualified, sees evidence and uncertainty, has time and authority, and can reject or stop",
+            "feedback": "Correct. Effective control depends on capability, information, authority, and practical action."
+          },
+          {
+            "id": "b",
+            "text": "An approval button appears somewhere in the interface",
+            "feedback": "Interface presence alone does not establish meaningful review."
+          },
+          {
+            "id": "c",
+            "text": "The model recommends approval by default",
+            "feedback": "A default can increase automation bias and weaken independent judgment."
+          }
+        ],
+        "correctOptionId": "a",
+        "critical": true,
+        "explanation": "Human control must work under actual operating conditions, not only exist in documentation."
+      },
+      {
+        "id": "advanced-assess-q2",
+        "prompt": "How should a team test a human control gate?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Only verify that the approver's name is displayed",
+            "feedback": "A label does not test whether the person can detect and control a failure."
+          },
+          {
+            "id": "b",
+            "text": "Run scenarios with incorrect outputs, time pressure, disagreement, escalation, and stop actions",
+            "feedback": "Correct. Scenario tests reveal whether the gate works when it matters."
+          },
+          {
+            "id": "c",
+            "text": "Assume trained reviewers will always catch errors",
+            "feedback": "Training helps but does not overcome poor evidence, overload, bad defaults, or weak authority."
+          }
+        ],
+        "correctOptionId": "b",
+        "explanation": "Control assurance tests both the technical gate and the human operating environment."
+      },
+      {
+        "id": "advanced-assess-q3",
+        "prompt": "What is a warning sign of automation bias?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Reviewers investigate disagreement and record reasons",
+            "feedback": "Independent review and reason capture can strengthen control."
+          },
+          {
+            "id": "b",
+            "text": "Evidence is easy to inspect beside the recommendation",
+            "feedback": "Accessible evidence supports meaningful review."
+          },
+          {
+            "id": "c",
+            "text": "Reviewers accept nearly every output quickly despite known model errors",
+            "feedback": "Correct. Rapid, uniform acceptance can indicate over-reliance or an impractical gate."
+          }
+        ],
+        "correctOptionId": "c",
+        "explanation": "Monitor reviewer behavior and workload, not only model metrics, to assess the control system."
+      }
+    ],
+    "takeaway": "A human gate is real only when a qualified owner can see, question, reject, stop, and correct the AI-assisted outcome."
+  },
+  {
+    "id": "advanced-refine",
+    "clearStep": "refine",
+    "levelId": "advanced",
+    "number": 5,
+    "title": "Scale with continuous improvement",
+    "minutes": 8,
+    "description": "Expand a proven use case through controlled rollout, monitoring, incident learning, and evidence-based change.",
+    "outcome": "You can build a scale plan that preserves configuration, control, and accountability across teams and programs.",
+    "skillName": "AI lifecycle scaling",
+    "objectives": [
+      "Define readiness criteria for moving from discovery to pilot to production to scale.",
+      "Monitor quality, control, workforce, mission, and incident signals.",
+      "Use change control, regression testing, and retirement decisions to manage drift."
+    ],
+    "concepts": [
+      {
+        "title": "Scale the evidence package",
+        "body": "A successful pilot is evidence for a specific population, workflow, model, data set, and control design. New programs or contexts require a transfer assessment, not automatic inheritance."
+      },
+      {
+        "title": "Monitor leading and lagging signals",
+        "body": "Track quality, overrides, review time, source failures, control attempts, accessibility, adoption, incidents, mission outcomes, and user feedback. Efficiency alone can hide rework or risk."
+      },
+      {
+        "title": "Treat changes as new evidence needs",
+        "body": "Model, prompt, tool, source, integration, policy, contract, user, or mission changes can alter behavior. Classify the change, run proportionate regression tests, approve, and preserve rollback."
+      }
+    ],
+    "practice": {
+      "id": "advanced-scale-plan",
+      "type": "action-plan",
+      "eyebrow": "Scale review",
+      "title": "Replace a big-bang rollout with controlled expansion",
+      "estimatedMinutes": 4,
+      "instructions": [
+        "Review the proposed rollout and the flagged concerns.",
+        "Define stage gates, monitoring, incident response, and change control.",
+        "Compare your response with the model scale plan."
+      ],
+      "scenario": "A fictional program-status assistant performed well in one sanitized pilot. Leaders are considering expansion across engineering, program, proposal, and mission-support teams. Each environment retains its own authorization and functional owners.",
+      "aiDraft": "The pilot saved 20 percent drafting time, so enable the assistant for every program Monday. Reuse the original prompt and approval, let teams add any sources they need, and review performance at year end.",
+      "concerns": [
+        {
+          "id": "transfer",
+          "text": "One pilot does not establish performance or authorization across different programs and functions.",
+          "category": "judgment"
+        },
+        {
+          "id": "source-expansion",
+          "text": "Unbounded source additions can change data risk, behavior, and contract or mission context.",
+          "category": "policy"
+        },
+        {
+          "id": "stale-configuration",
+          "text": "The plan has no versioned configuration, regression test, or rollback path.",
+          "category": "accuracy"
+        },
+        {
+          "id": "late-monitoring",
+          "text": "Annual review is too slow for quality drift, incidents, and control failures.",
+          "category": "policy"
+        }
+      ],
+      "planPrompts": [
+        {
+          "id": "stage-gates",
+          "label": "Stage gates",
+          "placeholder": "Define discovery, pilot, production, and scale evidence plus approvers..."
+        },
+        {
+          "id": "transfer",
+          "label": "Transfer assessment",
+          "placeholder": "Compare users, sources, decisions, risks, controls, and program restrictions..."
+        },
+        {
+          "id": "monitoring",
+          "label": "Monitoring and incidents",
+          "placeholder": "Track quality, overrides, control attempts, review load, incidents, and outcomes..."
+        },
+        {
+          "id": "change",
+          "label": "Change and retirement",
+          "placeholder": "Version configurations, regression test material changes, preserve rollback, define stop criteria..."
+        }
+      ],
+      "modelPlan": [
+        "Confirm the original pilot evidence, baseline, limitations, configuration, approved data, owners, and control results.",
+        "For each new program or function, complete a transfer assessment covering decisions, users, sources, markings, contracts, mission context, authorities, and failure consequence.",
+        "Use staged pilots with local functional and governance approval. Do not inherit production authorization automatically.",
+        "Monitor quality, unsupported claims, overrides, human-review load, control attempts, incidents, accessibility, time, rework, and mission or business outcomes.",
+        "Version the complete configuration, regression test material changes, retain rollback and stop controls, review incidents promptly, and retire uses that no longer meet value or control requirements."
+      ]
+    },
+    "quiz": [
+      {
+        "id": "advanced-refine-q1",
+        "prompt": "A use case succeeds in one program. What is needed before expanding it to another?",
+        "options": [
+          {
+            "id": "a",
+            "text": "A transfer assessment of users, decisions, sources, rules, risks, controls, and local authority",
+            "feedback": "Correct. Evidence and approval are context-specific."
+          },
+          {
+            "id": "b",
+            "text": "Only a copy of the original prompt",
+            "feedback": "The prompt is one component and does not carry context, controls, or authority."
+          },
+          {
+            "id": "c",
+            "text": "A promise that the new team will be careful",
+            "feedback": "Care matters, but scale requires explicit evidence, controls, and accountable approval."
+          }
+        ],
+        "correctOptionId": "a",
+        "explanation": "Controlled expansion tests whether prior evidence transfers to the new operating context."
+      },
+      {
+        "id": "advanced-refine-q2",
+        "prompt": "Which metric set best supports continuous improvement?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Drafting time only",
+            "feedback": "Efficiency alone can hide lower quality, rework, risk, or poor user outcomes."
+          },
+          {
+            "id": "b",
+            "text": "Quality, evidence errors, overrides, review load, incidents, accessibility, time, rework, and outcome measures",
+            "feedback": "Correct. Balanced signals reveal both value and control health."
+          },
+          {
+            "id": "c",
+            "text": "Number of prompts submitted",
+            "feedback": "Activity does not establish useful or responsible performance."
+          }
+        ],
+        "correctOptionId": "b",
+        "explanation": "A balanced measurement system reduces the chance of optimizing one metric at the expense of mission or control quality."
+      },
+      {
+        "id": "advanced-refine-q3",
+        "prompt": "A model update changes workflow behavior. What should happen?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Treat it as a material change, run proportionate regression tests, obtain approval, and preserve rollback",
+            "feedback": "Correct. Change control ties updated behavior to new evidence and a safe recovery path."
+          },
+          {
+            "id": "b",
+            "text": "Assume newer always means safer",
+            "feedback": "A newer model can introduce regressions, different failure modes, or control interactions."
+          },
+          {
+            "id": "c",
+            "text": "Hide the update from operators",
+            "feedback": "Operators and owners need relevant configuration and behavior-change information."
+          }
+        ],
+        "correctOptionId": "a",
+        "critical": true,
+        "explanation": "Material system changes require evidence, authorization, communication, and rollback readiness."
+      }
+    ],
+    "takeaway": "Scale only what the evidence supports, monitor the full system, and treat material change as a new assurance event."
+  }
+]

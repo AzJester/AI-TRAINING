@@ -1,0 +1,132 @@
+/* Capstone */
+
+.capstone-content {
+  width: min(900px, calc(100% - 64px));
+  margin: 0 auto;
+  padding: 64px 0 100px;
+}
+
+.capstone-brief,
+.capstone-workbench {
+  display: grid;
+  gap: 22px;
+}
+
+.capstone-stage-list {
+  display: grid;
+  gap: 10px;
+}
+
+.capstone-stage-list article {
+  display: grid;
+  grid-template-columns: 50px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+  background: var(--surface);
+  padding: 15px;
+}
+
+.capstone-stage-list article > span {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 11px 11px 3px 11px;
+  background: var(--lime);
+  font-weight: 850;
+}
+
+.capstone-stage-list strong {
+  display: block;
+}
+
+.capstone-stage-list p {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.capstone-response-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.capstone-response {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  padding: 20px;
+}
+
+.capstone-response-head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.capstone-response-head > b {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--lime);
+}
+
+.capstone-response-head strong,
+.capstone-response-head small {
+  display: block;
+}
+
+.capstone-response-head small {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.prompt-question {
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.model-response {
+  border-color: #f0cc8a;
+  background: var(--amber-soft);
+}
+
+.rubric-checklist > p {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.clear-completion-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0 28px;
+}
+
+.clear-completion-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border-radius: 99px;
+  background: var(--paper);
+  padding: 7px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.clear-completion-row b {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--lime);
+}
